@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Navbar from "../components/NavBar";
 
 interface Ride {
   id: number;
@@ -100,6 +101,7 @@ export default function UserDashboard() {
 
   return (
     <>
+      <Navbar></Navbar>
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
@@ -188,11 +190,11 @@ export default function UserDashboard() {
                   <div className="space-y-2">
                     <div className="flex items-center gap-2 text-gray-700">
                       <span className="text-green-600">📍</span>
-                      <span className="font-medium">{ride.from}</span>
+                      <span className="font-medium">From: {ride.from}</span>
                     </div>
                     <div className="flex items-center gap-2 text-gray-700">
                       <span className="text-red-600">📍</span>
-                      <span className="font-medium">{ride.to}</span>
+                      <span className="font-medium">To: {ride.to}</span>
                     </div>
                     <div className="flex items-center gap-4 text-sm text-gray-600 pt-2">
                       <span className="flex items-center gap-1">

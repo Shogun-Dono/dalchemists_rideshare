@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import UserDashboard from "./pages/UserDashboard";
-import AdminDashboard from "./pages/AdminDashBoard";
+import AdminDashboard from "./pages/AdminDashboard";
 
 function App() {
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
-  const navigate = useNavigate(); // ✅ useNavigate replaces window.location.href
+  const navigate = useNavigate();
 
   const handleRoleSelect = (role: string) => {
     setSelectedRole(role);
