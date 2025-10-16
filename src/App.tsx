@@ -1,259 +1,107 @@
 import { useState } from "react";
-
-interface Ride {
-  id: number;
-  driver: string;
-  from: string;
-  to: string;
-  date: string;
-  time: string;
-  seats: number;
-  price: string;
-  avatar: string;
-}
+import { Routes, Route, useNavigate } from "react-router-dom";
+import UserDashboard from "./pages/UserDashboard";
+import AdminDashboard from "./pages/AdminDashBoard";
 
 function App() {
-  const [fromLocation, setFromLocation] = useState("");
-  const [toLocation, setToLocation] = useState("");
+  const [selectedRole, setSelectedRole] = useState<string | null>(null);
+  const navigate = useNavigate(); // ✅ useNavigate replaces window.location.href
 
-  const recentRides: Ride[] = [
-    {
-      id: 1,
-      driver: "Sarah M.",
-      from: "Downtown",
-      to: "Airport",
-      date: "Oct 17",
-      time: "8:00 AM",
-      seats: 3,
-      price: "$15",
-      avatar: "SM",
-    },
-    {
-      id: 2,
-      driver: "James K.",
-      from: "West End",
-      to: "University",
-      date: "Oct 17",
-      time: "9:30 AM",
-      seats: 2,
-      price: "$8",
-      avatar: "JK",
-    },
-    {
-      id: 3,
-      driver: "Maria R.",
-      from: "Suburb Hills",
-      to: "Downtown",
-      date: "Oct 17",
-      time: "7:15 AM",
-      seats: 4,
-      price: "$12",
-      avatar: "MR",
-    },
-    {
-      id: 4,
-      driver: "Alex T.",
-      from: "North District",
-      to: "Shopping Mall",
-      date: "Oct 18",
-      time: "2:00 PM",
-      seats: 2,
-      price: "$10",
-      avatar: "AT",
-    },
-  ];
+  const handleRoleSelect = (role: string) => {
+    setSelectedRole(role);
 
-  const stats = [
-    {
-      icon: "👥",
-      value: "2,847",
-      label: "Rides Shared",
-      color: "bg-blue-500",
-      trend: "+12% this month",
-    },
-    {
-      icon: "🌱",
-      value: "18.5 tons",
-      label: "CO₂ Saved",
-      color: "bg-green-500",
-      trend: "Environmental impact",
-    },
-    {
-      icon: "💰",
-      value: "$42,150",
-      label: "Community Savings",
-      color: "bg-purple-500",
-      trend: "Total saved by riders",
-    },
-    {
-      icon: "🚗",
-      value: "1,240",
-      label: "Cars Off Road",
-      color: "bg-orange-500",
-      trend: "Reduced congestion",
-    },
-  ];
-
-  const handleSearch = () => {
-    console.log("Searching rides from", fromLocation, "to", toLocation);
+    if (role === "user") {
+      navigate("/user");
+    } else {
+      navigate("/admin");
+    }
   };
 
   return (
-    <>
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
-        <div className="max-w-7xl mx-auto">
-          {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-4xl font-bold text-gray-800 mb-2">
-              Community Rideshare
-            </h1>
-            <p className="text-gray-600">
-              Share your journey, reduce costs, protect the environment
-            </p>
-          </div>
-
-          {/* Search Section */}
-          <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
-              <span className="text-2xl">📍</span>
-              Find a Ride
-            </h2>
-            <div className="flex flex-col md:flex-row gap-4">
-              <div className="flex-1">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  From
-                </label>
-                <input
-                  type="text"
-                  value={fromLocation}
-                  onChange={(e) => setFromLocation(e.target.value)}
-                  placeholder="Enter starting location"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                />
-              </div>
-              <div className="flex-1">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  To
-                </label>
-                <input
-                  type="text"
-                  value={toLocation}
-                  onChange={(e) => setToLocation(e.target.value)}
-                  placeholder="Enter destination"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                />
-              </div>
-              <div className="flex items-end">
-                <button
-                  onClick={handleSearch}
-                  className="w-full md:w-auto px-8 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg"
-                >
-                  Search Rides
-                </button>
-              </div>
+    <div className="min-h-screen bg-gradient-to-br from-indigo-600 via-purple-600 to-blue-700 flex items-center justify-center p-6">
+      <div className="max-w-6xl w-full">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <div className="flex items-center justify-center mb-6">
+            <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center text-4xl shadow-2xl">
+              🚗
             </div>
           </div>
+          <h1 className="text-5xl md:text-6xl font-bold text-white mb-4">
+            Community Rideshare
+          </h1>
+          <p className="text-xl text-indigo-100 max-w-2xl mx-auto">
+            Connect, Share, and Travel Together. Join our community-driven
+            platform for sustainable transportation.
+          </p>
+        </div>
 
-          {/* Recent Rides Section */}
-          <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
-              <span className="text-2xl">🕐</span>
-              Recently Posted Rides
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {recentRides.map((ride) => (
-                <div
-                  key={ride.id}
-                  className="border border-gray-200 rounded-xl p-5 hover:shadow-md transition-shadow cursor-pointer bg-gradient-to-r from-white to-gray-50"
-                >
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
-                        {ride.avatar}
-                      </div>
-                      <div>
-                        <p className="font-semibold text-gray-800">
-                          {ride.driver}
-                        </p>
-                        <p className="text-sm text-gray-500 flex items-center gap-1">
-                          <span>👤</span>
-                          {ride.seats} seats available
-                        </p>
-                      </div>
-                    </div>
-                    <span className="text-lg font-bold text-blue-600">
-                      {ride.price}
-                    </span>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-gray-700">
-                      <span className="text-green-600">📍</span>
-                      <span className="font-medium">{ride.from}</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-gray-700">
-                      <span className="text-red-600">📍</span>
-                      <span className="font-medium">{ride.to}</span>
-                    </div>
-                    <div className="flex items-center gap-4 text-sm text-gray-600 pt-2">
-                      <span className="flex items-center gap-1">
-                        <span>📅</span>
-                        {ride.date}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <span>🕐</span>
-                        {ride.time}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Stats Section */}
-          <div className="bg-white rounded-2xl shadow-lg p-8">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
-              <span className="text-2xl">📈</span>
-              Community Impact
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {stats.map((stat, idx) => (
-                <div
-                  key={idx}
-                  className="relative overflow-hidden rounded-xl border border-gray-200 p-6 hover:shadow-lg transition-shadow"
-                >
-                  <div
-                    className={`${stat.color} w-14 h-14 rounded-lg flex items-center justify-center text-white mb-4 text-2xl`}
-                  >
-                    {stat.icon}
-                  </div>
-                  <p className="text-3xl font-bold text-gray-800 mb-1">
-                    {stat.value}
-                  </p>
-                  <p className="text-sm font-medium text-gray-600 mb-2">
-                    {stat.label}
-                  </p>
-                  <p className="text-xs text-gray-500">{stat.trend}</p>
-                </div>
-              ))}
-            </div>
-            <div className="mt-8 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200">
-              <h3 className="font-semibold text-gray-800 mb-2">
-                Why Rideshare Matters
-              </h3>
-              <p className="text-gray-600 text-sm">
-                Every shared ride reduces traffic congestion, lowers carbon
-                emissions, and saves money for both drivers and riders.
-                Together, our community has made a significant impact on
-                sustainability and accessibility. Join us in building a more
-                connected and eco-friendly community!
+        {/* Role Selection Cards */}
+        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          {/* User Card */}
+          <div
+            onClick={() => handleRoleSelect("user")}
+            className={`bg-white rounded-3xl p-8 cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl ${
+              selectedRole === "user" ? "ring-4 ring-yellow-400 scale-105" : ""
+            }`}
+          >
+            <div className="text-center">
+              <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-5xl mx-auto mb-6 shadow-lg">
+                👤
+              </div>
+              <h2 className="text-3xl font-bold text-gray-800 mb-4">
+                I'm a Rider
+              </h2>
+              <p className="text-gray-600 mb-6 text-lg">
+                Find rides, connect with drivers, and travel sustainably.
               </p>
+              <button className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white py-4 rounded-xl font-semibold text-lg hover:from-blue-600 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl">
+                Enter Dashboard →
+              </button>
+            </div>
+          </div>
+
+          {/* Admin Card */}
+          <div
+            onClick={() => handleRoleSelect("admin")}
+            className={`bg-white rounded-3xl p-8 cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl ${
+              selectedRole === "admin" ? "ring-4 ring-yellow-400 scale-105" : ""
+            }`}
+          >
+            <div className="text-center">
+              <div className="w-24 h-24 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center text-5xl mx-auto mb-6 shadow-lg">
+                👨‍💼
+              </div>
+              <h2 className="text-3xl font-bold text-gray-800 mb-4">
+                I'm an Admin
+              </h2>
+              <p className="text-gray-600 mb-6 text-lg">
+                See trends and analytics.
+              </p>
+              <button className="mt-7 w-full bg-gradient-to-r from-purple-500 to-pink-600 text-white py-4 rounded-xl font-semibold text-lg hover:from-purple-600 hover:to-pink-700 transition-all shadow-lg hover:shadow-xl">
+                Enter Admin Panel →
+              </button>
             </div>
           </div>
         </div>
+
+        {/* Footer */}
+        <div className="text-center mt-12 text-indigo-100">
+          <p>
+            © 2025 Community Rideshare. Building a sustainable future together.
+          </p>
+        </div>
       </div>
-    </>
+    </div>
   );
 }
 
-export default App;
+export default function AppWrapper() {
+  return (
+    <Routes>
+      <Route path="/" element={<App />} />
+      <Route path="/user" element={<UserDashboard />} />
+      <Route path="/admin" element={<AdminDashboard />} />
+    </Routes>
+  );
+}
