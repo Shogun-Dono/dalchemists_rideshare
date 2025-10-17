@@ -18,8 +18,8 @@ let ridesStore: Ride[] = [
   {
     id: 1,
     driver: "Sarah M.",
-    from: "Downtown",
-    to: "Airport",
+    from: "Halifax, NS",
+    to: "Dartmouth, NS",
     date: "Oct 17",
     time: "8:00 AM",
     seats: 3,

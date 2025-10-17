@@ -1,16 +1,50 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "../components/NavBar";
 import { getRides } from "./UserDashboard";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  Polyline,
+} from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+
+// Helper function to fetch coordinates using OpenStreetMap’s Nominatim API
+async function getCoordinates(location) {
+  const response = await fetch(
+    `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+      location
+    )}`
+  );
+  const data = await response.json();
+  if (data.length === 0) return null;
+  return [parseFloat(data[0].lat), parseFloat(data[0].lon)];
+}
 
 export default function RideDetails() {
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams();
   const navigate = useNavigate();
   const [passengers, setPassengers] = useState(1);
   const [message, setMessage] = useState("");
+  const [fromCoords, setFromCoords] = useState(null);
+  const [toCoords, setToCoords] = useState(null);
 
   const rides = getRides();
   const ride = rides.find((r) => r.id === Number(id));
+
+  // Fetch map coordinates for both locations when component loads
+  useEffect(() => {
+    if (ride) {
+      (async () => {
+        const from = await getCoordinates(ride.from);
+        const to = await getCoordinates(ride.to);
+        setFromCoords(from);
+        setToCoords(to);
+      })();
+    }
+  }, [ride]);
 
   if (!ride) {
     return (
@@ -135,62 +169,39 @@ export default function RideDetails() {
                 </div>
               </div>
 
-              {/* Trip Details */}
-              <div>
+              {/* Leaflet Map */}
+              <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-200">
                 <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                  Trip Details
+                  Route Map
                 </h3>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-gray-50 rounded-lg p-4">
-                    <p className="text-sm text-gray-500 mb-1">Date</p>
-                    <p className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-                      <span>📅</span>
-                      {ride.date}
+                <div className="h-96 w-full rounded-lg overflow-hidden">
+                  {fromCoords && toCoords ? (
+                    <MapContainer
+                      center={fromCoords}
+                      zoom={9}
+                      scrollWheelZoom={true}
+                      className="h-full w-full"
+                    >
+                      <TileLayer
+                        attribution="&copy; OpenStreetMap contributors"
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                      />
+                      <Marker position={fromCoords}>
+                        <Popup>Pickup: {ride.from}</Popup>
+                      </Marker>
+                      <Marker position={toCoords}>
+                        <Popup>Drop-off: {ride.to}</Popup>
+                      </Marker>
+                      <Polyline
+                        positions={[fromCoords, toCoords]}
+                        color="blue"
+                      />
+                    </MapContainer>
+                  ) : (
+                    <p className="text-gray-500 text-center mt-8">
+                      Loading map...
                     </p>
-                  </div>
-                  <div className="bg-gray-50 rounded-lg p-4">
-                    <p className="text-sm text-gray-500 mb-1">Time</p>
-                    <p className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-                      <span>🕐</span>
-                      {ride.time}
-                    </p>
-                  </div>
-                  <div className="bg-gray-50 rounded-lg p-4">
-                    <p className="text-sm text-gray-500 mb-1">
-                      Available Seats
-                    </p>
-                    <p className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-                      <span>👤</span>
-                      {ride.seats} seats
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Additional Info */}
-              <div>
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                  Additional Information
-                </h3>
-                <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
-                  <ul className="space-y-2 text-sm text-gray-700">
-                    <li className="flex items-center gap-2">
-                      <span className="text-blue-600">✓</span>
-                      Non-smoking vehicle
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-blue-600">✓</span>
-                      Air conditioning available
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-blue-600">✓</span>
-                      Luggage space available
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-blue-600">✓</span>
-                      Pet-friendly (small pets only)
-                    </li>
-                  </ul>
+                  )}
                 </div>
               </div>
             </div>
