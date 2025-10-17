@@ -2,6 +2,7 @@ import { useState } from "react";
 import { getRides, subscribeToRides, addRide } from "./UserDashboard";
 import Navbar from "../components/NavBar";
 
+
 export default function DriverDashboard() {
   const [rideFrom, setRideFrom] = useState("");
   const [rideTo, setRideTo] = useState("");

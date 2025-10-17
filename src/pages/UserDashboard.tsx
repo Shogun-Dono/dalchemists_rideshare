@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../components/NavBar";
 
 interface Ride {
@@ -75,6 +76,7 @@ export function subscribeToRides(listener: () => void): () => void {
 }
 
 export default function UserDashboard() {
+  const navigate = useNavigate();
   const [fromLocation, setFromLocation] = useState("");
   const [toLocation, setToLocation] = useState("");
   const [, setUpdateTrigger] = useState(0);
@@ -123,9 +125,13 @@ export default function UserDashboard() {
     console.log("Searching rides from", fromLocation, "to", toLocation);
   };
 
+  const handleRideClick = (rideId: number) => {
+    navigate(`/ride-details/${rideId}`);
+  };
+
   return (
     <>
-      <Navbar></Navbar>
+      <Navbar />
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
@@ -190,7 +196,8 @@ export default function UserDashboard() {
               {rides.map((ride) => (
                 <div
                   key={ride.id}
-                  className="border border-gray-200 rounded-xl p-5 hover:shadow-md transition-shadow cursor-pointer bg-gradient-to-r from-white to-gray-50"
+                  onClick={() => handleRideClick(ride.id)}
+                  className="border border-gray-200 rounded-xl p-5 hover:shadow-md transition-shadow cursor-pointer bg-gradient-to-r from-white to-gray-50 hover:border-blue-300"
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center gap-3">
@@ -230,7 +237,7 @@ export default function UserDashboard() {
                   </div>
                   <div className="mt-4 pt-4 border-t border-gray-200">
                     <button className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors">
-                      Request Ride
+                      View Details
                     </button>
                   </div>
                 </div>
