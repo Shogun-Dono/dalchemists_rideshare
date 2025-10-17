@@ -4,6 +4,7 @@ import UserDashboard from "./pages/UserDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import DriverDashboard from "./pages/DriverDashboard";
 import RideDetails from "./pages/RideDetails";
+import AboutPage from "./pages/AboutPage";
 
 function App() {
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
@@ -133,6 +134,7 @@ export default function AppWrapper() {
       <Route path="/driver" element={<DriverDashboard />} />
       <Route path="/admin" element={<AdminDashboard />} />
       <Route path="/ride-details/:id" element={<RideDetails />} />
+      <Route path="/about" element={<AboutPage/>} />
     </Routes>
   );
 }
