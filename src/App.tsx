@@ -5,6 +5,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import DriverDashboard from "./pages/DriverDashboard";
 import RideDetails from "./pages/RideDetails";
 import AboutPage from "./pages/AboutPage";
+import ContactPage from "./pages/ContactPage";
 
 function App() {
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
@@ -118,7 +119,7 @@ function App() {
         {/* Footer */}
         <div className="text-center mt-12 text-indigo-100">
           <p>
-            © 2025 Community Rideshare. Building a sustainable future together.
+            © 2025 NS Move. Building a sustainable future together.
           </p>
         </div>
       </div>
@@ -135,6 +136,8 @@ export default function AppWrapper() {
       <Route path="/admin" element={<AdminDashboard />} />
       <Route path="/ride-details/:id" element={<RideDetails />} />
       <Route path="/about" element={<AboutPage/>} />
+      <Route path="/contact" element={<ContactPage/>} />
+      
     </Routes>
   );
 }
