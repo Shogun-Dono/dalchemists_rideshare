@@ -8,5 +8,16 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  server: {
+    host: true, // This is the same as --host
+    strictPort: true,
+    port: 5173, // You can specify the port
+    hmr: {
+        clientPort: 443 // This is often needed in these types of cloud IDEs
+    },
+    allowedHosts: [
+      'ide-rbcreact-rbchubhacks.services.oip.virtusa.dev'
+    ]
+  }
   
 })
