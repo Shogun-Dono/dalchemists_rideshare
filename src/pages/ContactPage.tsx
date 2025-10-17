@@ -1,5 +1,6 @@
 import { Mail, Phone, MapPin, Clock, Send, MessageCircle } from 'lucide-react';
 import { useState } from 'react';
+import NavBar from '../components/NavBar';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -30,20 +31,7 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-600 via-purple-600 to-blue-700">
-      {/* Navigation Bar */}
-      <div className="bg-white bg-opacity-10 backdrop-blur-md sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-2xl shadow-lg">
-              🚗
-            </div>
-            <span className="text-2xl font-bold text-white">NS Move</span>
-          </div>
-          <button className="bg-white text-indigo-600 px-6 py-2 rounded-lg font-semibold hover:bg-opacity-90 transition-all shadow-lg">
-            Back to Home
-          </button>
-        </div>
-      </div>
+    <NavBar></NavBar>
 
       {/* Hero Section */}
       <div className="max-w-6xl mx-auto px-6 py-16">
