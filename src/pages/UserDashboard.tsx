@@ -12,57 +12,81 @@ interface Ride {
   avatar: string;
 }
 
+// In-memory storage for rides
+let ridesStore: Ride[] = [
+  {
+    id: 1,
+    driver: "Sarah M.",
+    from: "Downtown",
+    to: "Airport",
+    date: "Oct 17",
+    time: "8:00 AM",
+    seats: 3,
+    avatar: "SM",
+  },
+  {
+    id: 2,
+    driver: "James K.",
+    from: "West End",
+    to: "University",
+    date: "Oct 17",
+    time: "9:30 AM",
+    seats: 2,
+    avatar: "JK",
+  },
+  {
+    id: 3,
+    driver: "Maria R.",
+    from: "Suburb Hills",
+    to: "Downtown",
+    date: "Oct 17",
+    time: "7:15 AM",
+    seats: 4,
+    avatar: "MR",
+  },
+  {
+    id: 4,
+    driver: "Alex T.",
+    from: "North District",
+    to: "Shopping Mall",
+    date: "Oct 18",
+    time: "2:00 PM",
+    seats: 2,
+    avatar: "AT",
+  },
+];
+
+let listeners: Array<() => void> = [];
+
+export function getRides(): Ride[] {
+  return ridesStore;
+}
+
+export function addRide(ride: Ride): void {
+  ridesStore = [ride, ...ridesStore];
+  listeners.forEach((listener) => listener());
+}
+
+export function subscribeToRides(listener: () => void): () => void {
+  listeners.push(listener);
+  return () => {
+    listeners = listeners.filter((l) => l !== listener);
+  };
+}
+
 export default function UserDashboard() {
   const [fromLocation, setFromLocation] = useState("");
   const [toLocation, setToLocation] = useState("");
+  const [, setUpdateTrigger] = useState(0);
 
-  const [rideFrom, setRideFrom] = useState("");
-  const [rideTo, setRideTo] = useState("");
-  const [rideDate, setRideDate] = useState("");
-  const [rideSeats, setRideSeats] = useState<number>(1);
+  useState(() => {
+    const unsubscribe = subscribeToRides(() => {
+      setUpdateTrigger((prev) => prev + 1);
+    });
+    return unsubscribe;
+  });
 
-  const [rides, setRides] = useState<Ride[]>([
-    {
-      id: 1,
-      driver: "Sarah M.",
-      from: "Downtown",
-      to: "Airport",
-      date: "Oct 17",
-      time: "8:00 AM",
-      seats: 3,
-      avatar: "SM",
-    },
-    {
-      id: 2,
-      driver: "James K.",
-      from: "West End",
-      to: "University",
-      date: "Oct 17",
-      time: "9:30 AM",
-      seats: 2,
-      avatar: "JK",
-    },
-    {
-      id: 3,
-      driver: "Maria R.",
-      from: "Suburb Hills",
-      to: "Downtown",
-      date: "Oct 17",
-      time: "7:15 AM",
-      seats: 4,
-      avatar: "MR",
-    },
-    {
-      id: 4,
-      driver: "Alex T.",
-      from: "North District",
-      to: "Shopping Mall",
-      date: "Oct 18",
-      time: "2:00 PM",
-      seats: 2,
-      avatar: "AT",
-    },
-  ]);
+  const rides = getRides();
 
   const stats = [
     {
@@ -99,37 +123,9 @@ export default function UserDashboard() {
     console.log("Searching rides from", fromLocation, "to", toLocation);
   };
 
-  const handlePostRide = () => {
-    if (!rideFrom || !rideTo || !rideDate) {
-      alert("Please fill in all ride details before posting.");
-      return;
-    }
-
-    const newRide: Ride = {
-      id: rides.length + 1,
-      driver: "You",
-      from: rideFrom,
-      to: rideTo,
-      date: new Date(rideDate).toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-      }),
-      time: "N/A",
-      seats: rideSeats,
-      avatar: "U",
-    };
-
-    setRides([newRide, ...rides]);
-    setRideFrom("");
-    setRideTo("");
-    setRideDate("");
-    setRideSeats(1);
-    alert("Ride posted successfully!");
-  };
-
   return (
     <>
-      <Navbar />
+      <Navbar></Navbar>
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
@@ -184,76 +180,11 @@ export default function UserDashboard() {
             </div>
           </div>
 
-          {/* 🚗 Post a Ride Section */}
+          {/* Available Rides */}
           <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
             <h2 className="text-2xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
               <span className="text-2xl">🚗</span>
-              Post a Ride
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  From
-                </label>
-                <input
-                  type="text"
-                  value={rideFrom}
-                  onChange={(e) => setRideFrom(e.target.value)}
-                  placeholder="Enter pickup location"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  To
-                </label>
-                <input
-                  type="text"
-                  value={rideTo}
-                  onChange={(e) => setRideTo(e.target.value)}
-                  placeholder="Enter destination"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Date
-                </label>
-                <input
-                  type="date"
-                  value={rideDate}
-                  onChange={(e) => setRideDate(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Available Seats
-                </label>
-                <input
-                  type="number"
-                  min={1}
-                  value={rideSeats}
-                  onChange={(e) => setRideSeats(Number(e.target.value))}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                />
-              </div>
-            </div>
-            <div className="mt-6">
-              <button
-                onClick={handlePostRide}
-                className="px-8 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg"
-              >
-                Post Ride
-              </button>
-            </div>
-          </div>
-
-          {/* Recently Posted Rides */}
-          <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
-              <span className="text-2xl">🕐</span>
-              Recently Posted Rides
+              Available Rides
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {rides.map((ride) => (
@@ -296,6 +227,11 @@ export default function UserDashboard() {
                         {ride.time}
                       </span>
                     </div>
+                  </div>
+                  <div className="mt-4 pt-4 border-t border-gray-200">
+                    <button className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors">
+                      Request Ride
+                    </button>
                   </div>
                 </div>
               ))}

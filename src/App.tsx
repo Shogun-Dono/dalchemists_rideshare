@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import UserDashboard from "./pages/UserDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import DriverDashboard from "./pages/DriverDashboard";
 
 function App() {
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
@@ -12,6 +13,8 @@ function App() {
 
     if (role === "user") {
       navigate("/user");
+    } else if (role === "driver") {
+      navigate("/driver");
     } else {
       navigate("/admin");
     }
@@ -37,7 +40,7 @@ function App() {
         </div>
 
         {/* Role Selection Cards */}
-        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {/* User Card */}
           <div
             onClick={() => handleRoleSelect("user")}
@@ -56,6 +59,31 @@ function App() {
                 Find rides, connect with drivers, and travel sustainably.
               </p>
               <button className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white py-4 rounded-xl font-semibold text-lg hover:from-blue-600 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl">
+                Enter Dashboard →
+              </button>
+            </div>
+          </div>
+
+          {/* Driver Card */}
+          <div
+            onClick={() => handleRoleSelect("driver")}
+            className={`bg-white rounded-3xl p-8 cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl ${
+              selectedRole === "driver"
+                ? "ring-4 ring-yellow-400 scale-105"
+                : ""
+            }`}
+          >
+            <div className="text-center">
+              <div className="w-24 h-24 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center text-5xl mx-auto mb-6 shadow-lg">
+                🚗
+              </div>
+              <h2 className="text-3xl font-bold text-gray-800 mb-4">
+                I'm a Driver
+              </h2>
+              <p className="text-gray-600 mb-6 text-lg">
+                Share your rides, earn money, and help reduce carbon emissions.
+              </p>
+              <button className="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white py-4 rounded-xl font-semibold text-lg hover:from-green-600 hover:to-emerald-700 transition-all shadow-lg hover:shadow-xl">
                 Enter Dashboard →
               </button>
             </div>
@@ -101,6 +129,7 @@ export default function AppWrapper() {
     <Routes>
       <Route path="/" element={<App />} />
       <Route path="/user" element={<UserDashboard />} />
+      <Route path="/driver" element={<DriverDashboard />} />
       <Route path="/admin" element={<AdminDashboard />} />
     </Routes>
   );

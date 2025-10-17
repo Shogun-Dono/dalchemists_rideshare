@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom"; // or your routing library
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   return (
@@ -10,11 +10,23 @@ const Navbar = () => {
         className="text-2xl font-bold text-purple-700 hover:text-purple-900"
         aria-label="Go to home page"
       >
-        SociaRide
+        NSMove
       </Link>
 
       {/* Navigation Links */}
       <div className="flex space-x-6 items-center">
+        <Link
+          to="/user"
+          className="text-gray-700 hover:text-purple-700 font-medium"
+        >
+          Find Rides
+        </Link>
+        <Link
+          to="/driver"
+          className="text-gray-700 hover:text-purple-700 font-medium"
+        >
+          Drive
+        </Link>
         <Link
           to="/about"
           className="text-gray-700 hover:text-purple-700 font-medium"
