@@ -6,8 +6,8 @@ const Navbar = () => {
     <nav className="bg-white shadow-md px-6 py-4 flex items-center justify-between">
       {/* Brand / Home Link */}
       <Link
-        to="/src/App.tsx"
-        className="ml-6 text-2xl font-bold text-purple-700 hover:text-purple-900"
+        to="/"
+        className="text-2xl font-bold text-purple-700 hover:text-purple-900"
         aria-label="Go to home page"
       >
         SociaRide
@@ -16,13 +16,13 @@ const Navbar = () => {
       {/* Navigation Links */}
       <div className="flex space-x-6 items-center">
         <Link
-          to="/src/pages/AboutUs.tsx"
+          to="/about"
           className="text-gray-700 hover:text-purple-700 font-medium"
         >
           About Us
         </Link>
         <Link
-          to="/src/pages/AboutUs.tsx"
+          to="/contact"
           className="text-gray-700 hover:text-purple-700 font-medium"
         >
           Contact Us

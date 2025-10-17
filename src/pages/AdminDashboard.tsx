@@ -15,6 +15,7 @@ import {
   Cell,
   ResponsiveContainer,
 } from "recharts";
+import Navbar from "../components/NavBar";
 
 interface HeatmapData {
   area: string;
@@ -339,160 +340,167 @@ function AdminDashboard() {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">
-            Admin Dashboard
-          </h1>
-          <p className="text-gray-600">
-            Halifax Regional Municipality - Rideshare Analytics
-          </p>
-        </div>
+    <>
+    <Navbar></Navbar>
+      <div className="min-h-screen bg-gray-50 p-6">
+        <div className="max-w-7xl mx-auto">
+          {/* Header */}
+          <div className="mb-6">
+            <h1 className="text-4xl font-bold text-gray-800 mb-2">
+              Admin Dashboard
+            </h1>
+            <p className="text-gray-600">
+              Halifax Regional Municipality - Rideshare Analytics
+            </p>
+          </div>
 
-        {/* Search and Filters */}
-        <div className="bg-white rounded-xl shadow-md p-6 mb-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Search Location
-              </label>
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search by area name..."
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
-              />
+          {/* Search and Filters */}
+          <div className="bg-white rounded-xl shadow-md p-6 mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Search Location
+                </label>
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search by area name..."
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Activity Level
+                </label>
+                <select
+                  value={selectedFilter}
+                  onChange={(e) => setSelectedFilter(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                >
+                  <option value="all">All Areas</option>
+                  <option value="high">High Activity (300+)</option>
+                  <option value="medium">Medium Activity (200-300)</option>
+                  <option value="low">Low Activity (&lt;200)</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Time Range
+                </label>
+                <select
+                  value={timeRange}
+                  onChange={(e) => setTimeRange(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                >
+                  <option value="day">Today</option>
+                  <option value="week">This Week</option>
+                  <option value="month">This Month</option>
+                  <option value="year">This Year</option>
+                </select>
+              </div>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Activity Level
-              </label>
-              <select
-                value={selectedFilter}
-                onChange={(e) => setSelectedFilter(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+          </div>
+
+          {/* View Navigation Buttons */}
+          <div className="bg-white rounded-xl shadow-md p-4 mb-6">
+            <div className="flex flex-wrap gap-3">
+              <button
+                onClick={() => setActiveView("map")}
+                className={`px-6 py-3 rounded-lg font-semibold transition-all ${
+                  activeView === "map"
+                    ? "bg-purple-600 text-white shadow-lg"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                }`}
               >
-                <option value="all">All Areas</option>
-                <option value="high">High Activity (300+)</option>
-                <option value="medium">Medium Activity (200-300)</option>
-                <option value="low">Low Activity (&lt;200)</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Time Range
-              </label>
-              <select
-                value={timeRange}
-                onChange={(e) => setTimeRange(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                🗺️ Heatmap
+              </button>
+              <button
+                onClick={() => setActiveView("bar")}
+                className={`px-6 py-3 rounded-lg font-semibold transition-all ${
+                  activeView === "bar"
+                    ? "bg-purple-600 text-white shadow-lg"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                }`}
               >
-                <option value="day">Today</option>
-                <option value="week">This Week</option>
-                <option value="month">This Month</option>
-                <option value="year">This Year</option>
-              </select>
+                📊 Bar Chart
+              </button>
+              <button
+                onClick={() => setActiveView("pie")}
+                className={`px-6 py-3 rounded-lg font-semibold transition-all ${
+                  activeView === "pie"
+                    ? "bg-purple-600 text-white shadow-lg"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                }`}
+              >
+                🥧 Pie Chart
+              </button>
+              <button
+                onClick={() => setActiveView("line")}
+                className={`px-6 py-3 rounded-lg font-semibold transition-all ${
+                  activeView === "line"
+                    ? "bg-purple-600 text-white shadow-lg"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                }`}
+              >
+                📈 Line Chart
+              </button>
+              <button
+                onClick={() => setActiveView("histogram")}
+                className={`px-6 py-3 rounded-lg font-semibold transition-all ${
+                  activeView === "histogram"
+                    ? "bg-purple-600 text-white shadow-lg"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                }`}
+              >
+                📉 Histogram
+              </button>
             </div>
           </div>
-        </div>
 
-        {/* View Navigation Buttons */}
-        <div className="bg-white rounded-xl shadow-md p-4 mb-6">
-          <div className="flex flex-wrap gap-3">
-            <button
-              onClick={() => setActiveView("map")}
-              className={`px-6 py-3 rounded-lg font-semibold transition-all ${
-                activeView === "map"
-                  ? "bg-purple-600 text-white shadow-lg"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-              }`}
-            >
-              🗺️ Heatmap
-            </button>
-            <button
-              onClick={() => setActiveView("bar")}
-              className={`px-6 py-3 rounded-lg font-semibold transition-all ${
-                activeView === "bar"
-                  ? "bg-purple-600 text-white shadow-lg"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-              }`}
-            >
-              📊 Bar Chart
-            </button>
-            <button
-              onClick={() => setActiveView("pie")}
-              className={`px-6 py-3 rounded-lg font-semibold transition-all ${
-                activeView === "pie"
-                  ? "bg-purple-600 text-white shadow-lg"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-              }`}
-            >
-              🥧 Pie Chart
-            </button>
-            <button
-              onClick={() => setActiveView("line")}
-              className={`px-6 py-3 rounded-lg font-semibold transition-all ${
-                activeView === "line"
-                  ? "bg-purple-600 text-white shadow-lg"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-              }`}
-            >
-              📈 Line Chart
-            </button>
-            <button
-              onClick={() => setActiveView("histogram")}
-              className={`px-6 py-3 rounded-lg font-semibold transition-all ${
-                activeView === "histogram"
-                  ? "bg-purple-600 text-white shadow-lg"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-              }`}
-            >
-              📉 Histogram
-            </button>
+          {/* Central View */}
+          <div className="bg-white rounded-xl shadow-md p-6 mb-6">
+            {activeView === "map" && <InteractiveHeatmap data={filteredData} />}
+            {activeView === "bar" && <RidesByAreaChart data={ridesByArea} />}
+            {activeView === "pie" && (
+              <TimeDistributionChart data={timeDistribution} />
+            )}
+            {activeView === "line" && (
+              <WeeklyTrendsChart data={ridesOverTime} />
+            )}
+            {activeView === "histogram" && (
+              <DistanceHistogramChart data={rideDistances} />
+            )}
           </div>
-        </div>
 
-        {/* Central View */}
-        <div className="bg-white rounded-xl shadow-md p-6 mb-6">
-          {activeView === "map" && <InteractiveHeatmap data={filteredData} />}
-          {activeView === "bar" && <RidesByAreaChart data={ridesByArea} />}
-          {activeView === "pie" && (
-            <TimeDistributionChart data={timeDistribution} />
-          )}
-          {activeView === "line" && <WeeklyTrendsChart data={ridesOverTime} />}
-          {activeView === "histogram" && (
-            <DistanceHistogramChart data={rideDistances} />
-          )}
-        </div>
-
-        {/* Summary Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-white rounded-xl shadow-md p-6">
-            <p className="text-gray-600 text-sm mb-1">Total Rides</p>
-            <p className="text-3xl font-bold text-purple-600">2,620</p>
-            <p className="text-green-600 text-sm mt-1">↑ 12% from last week</p>
-          </div>
-          <div className="bg-white rounded-xl shadow-md p-6">
-            <p className="text-gray-600 text-sm mb-1">Active Areas</p>
-            <p className="text-3xl font-bold text-blue-600">10</p>
-            <p className="text-gray-500 text-sm mt-1">Across Halifax</p>
-          </div>
-          <div className="bg-white rounded-xl shadow-md p-6">
-            <p className="text-gray-600 text-sm mb-1">Avg. Distance</p>
-            <p className="text-3xl font-bold text-green-600">8.5 km</p>
-            <p className="text-gray-500 text-sm mt-1">Per ride</p>
-          </div>
-          <div className="bg-white rounded-xl shadow-md p-6">
-            <p className="text-gray-600 text-sm mb-1">Peak Hour</p>
-            <p className="text-3xl font-bold text-orange-600">5 PM</p>
-            <p className="text-gray-500 text-sm mt-1">Evening commute</p>
+          {/* Summary Stats */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="bg-white rounded-xl shadow-md p-6">
+              <p className="text-gray-600 text-sm mb-1">Total Rides</p>
+              <p className="text-3xl font-bold text-purple-600">2,620</p>
+              <p className="text-green-600 text-sm mt-1">
+                ↑ 12% from last week
+              </p>
+            </div>
+            <div className="bg-white rounded-xl shadow-md p-6">
+              <p className="text-gray-600 text-sm mb-1">Active Areas</p>
+              <p className="text-3xl font-bold text-blue-600">10</p>
+              <p className="text-gray-500 text-sm mt-1">Across Halifax</p>
+            </div>
+            <div className="bg-white rounded-xl shadow-md p-6">
+              <p className="text-gray-600 text-sm mb-1">Avg. Distance</p>
+              <p className="text-3xl font-bold text-green-600">8.5 km</p>
+              <p className="text-gray-500 text-sm mt-1">Per ride</p>
+            </div>
+            <div className="bg-white rounded-xl shadow-md p-6">
+              <p className="text-gray-600 text-sm mb-1">Peak Hour</p>
+              <p className="text-3xl font-bold text-orange-600">5 PM</p>
+              <p className="text-gray-500 text-sm mt-1">Evening commute</p>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

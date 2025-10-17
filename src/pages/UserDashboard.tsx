@@ -9,7 +9,6 @@ interface Ride {
   date: string;
   time: string;
   seats: number;
-  price: string;
   avatar: string;
 }
 
@@ -17,7 +16,12 @@ export default function UserDashboard() {
   const [fromLocation, setFromLocation] = useState("");
   const [toLocation, setToLocation] = useState("");
 
-  const recentRides: Ride[] = [
+  const [rideFrom, setRideFrom] = useState("");
+  const [rideTo, setRideTo] = useState("");
+  const [rideDate, setRideDate] = useState("");
+  const [rideSeats, setRideSeats] = useState<number>(1);
+
+  const [rides, setRides] = useState<Ride[]>([
     {
       id: 1,
       driver: "Sarah M.",
@@ -26,7 +30,6 @@ export default function UserDashboard() {
       date: "Oct 17",
       time: "8:00 AM",
       seats: 3,
-      price: "$15",
       avatar: "SM",
     },
     {
@@ -37,7 +40,6 @@ export default function UserDashboard() {
       date: "Oct 17",
       time: "9:30 AM",
       seats: 2,
-      price: "$8",
       avatar: "JK",
     },
     {
@@ -48,7 +50,6 @@ export default function UserDashboard() {
       date: "Oct 17",
       time: "7:15 AM",
       seats: 4,
-      price: "$12",
       avatar: "MR",
     },
     {
@@ -59,10 +60,9 @@ export default function UserDashboard() {
       date: "Oct 18",
       time: "2:00 PM",
       seats: 2,
-      price: "$10",
       avatar: "AT",
     },
-  ];
+  ]);
 
   const stats = [
     {
@@ -99,9 +99,37 @@ export default function UserDashboard() {
     console.log("Searching rides from", fromLocation, "to", toLocation);
   };
 
+  const handlePostRide = () => {
+    if (!rideFrom || !rideTo || !rideDate) {
+      alert("Please fill in all ride details before posting.");
+      return;
+    }
+
+    const newRide: Ride = {
+      id: rides.length + 1,
+      driver: "You",
+      from: rideFrom,
+      to: rideTo,
+      date: new Date(rideDate).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+      }),
+      time: "N/A",
+      seats: rideSeats,
+      avatar: "U",
+    };
+
+    setRides([newRide, ...rides]);
+    setRideFrom("");
+    setRideTo("");
+    setRideDate("");
+    setRideSeats(1);
+    alert("Ride posted successfully!");
+  };
+
   return (
     <>
-      <Navbar></Navbar>
+      <Navbar />
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
@@ -156,14 +184,79 @@ export default function UserDashboard() {
             </div>
           </div>
 
-          {/* Recent Rides Section */}
+          {/* 🚗 Post a Ride Section */}
+          <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
+              <span className="text-2xl">🚗</span>
+              Post a Ride
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  From
+                </label>
+                <input
+                  type="text"
+                  value={rideFrom}
+                  onChange={(e) => setRideFrom(e.target.value)}
+                  placeholder="Enter pickup location"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  To
+                </label>
+                <input
+                  type="text"
+                  value={rideTo}
+                  onChange={(e) => setRideTo(e.target.value)}
+                  placeholder="Enter destination"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Date
+                </label>
+                <input
+                  type="date"
+                  value={rideDate}
+                  onChange={(e) => setRideDate(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Available Seats
+                </label>
+                <input
+                  type="number"
+                  min={1}
+                  value={rideSeats}
+                  onChange={(e) => setRideSeats(Number(e.target.value))}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                />
+              </div>
+            </div>
+            <div className="mt-6">
+              <button
+                onClick={handlePostRide}
+                className="px-8 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg"
+              >
+                Post Ride
+              </button>
+            </div>
+          </div>
+
+          {/* Recently Posted Rides */}
           <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
             <h2 className="text-2xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
               <span className="text-2xl">🕐</span>
               Recently Posted Rides
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {recentRides.map((ride) => (
+              {rides.map((ride) => (
                 <div
                   key={ride.id}
                   className="border border-gray-200 rounded-xl p-5 hover:shadow-md transition-shadow cursor-pointer bg-gradient-to-r from-white to-gray-50"
@@ -183,9 +276,6 @@ export default function UserDashboard() {
                         </p>
                       </div>
                     </div>
-                    <span className="text-lg font-bold text-blue-600">
-                      {ride.price}
-                    </span>
                   </div>
                   <div className="space-y-2">
                     <div className="flex items-center gap-2 text-gray-700">
