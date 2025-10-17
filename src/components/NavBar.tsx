@@ -1,6 +1,8 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
+  const navigate = useNavigate();
+
   return (
     <nav className="bg-white shadow-md px-6 py-4 flex items-center justify-between">
       {/* Brand / Home Link */}
@@ -42,10 +44,8 @@ const Navbar = () => {
         {/* Profile Icon */}
         <button
           aria-label="Profile"
-          className="focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-full p-1"
-          onClick={() => {
-            /* Add profile menu or routing logic here */
-          }}
+          className="focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-full p-1 hover:bg-white hover:bg-opacity-20 transition-all"
+          onClick={() => navigate('/profile')}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

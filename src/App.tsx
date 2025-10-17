@@ -6,6 +6,7 @@ import DriverDashboard from "./pages/DriverDashboard";
 import RideDetails from "./pages/RideDetails";
 import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
+import ProfilePage from "./pages/ProfilePage";
 
 function App() {
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
@@ -137,6 +138,7 @@ export default function AppWrapper() {
       <Route path="/ride-details/:id" element={<RideDetails />} />
       <Route path="/about" element={<AboutPage/>} />
       <Route path="/contact" element={<ContactPage/>} />
+      <Route path="/profile" element={<ProfilePage/>} />
       
     </Routes>
   );
