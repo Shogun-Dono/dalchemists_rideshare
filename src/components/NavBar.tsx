@@ -10,7 +10,7 @@ const Navbar = () => {
         className="text-2xl font-bold text-purple-700 hover:text-purple-900"
         aria-label="Go to home page"
       >
-        NSMove
+        NS Move
       </Link>
 
       {/* Navigation Links */}
