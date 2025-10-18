@@ -191,10 +191,7 @@ export default function RideDetails() {
                 <p className="text-sm text-gray-500 mb-1">Available Seats</p>
                 <p className="text-lg font-semibold text-gray-800">👤 {ride.seats} seats available</p>
               </div>
-              <div>
-                <p className="text-sm text-gray-500 mb-1">Estimated Cost</p>
-                <p className="text-lg font-semibold text-gray-800">💰 $8.50 per seat</p>
-              </div>
+
             </div>
 
             {/* Route Information */}
