@@ -11,7 +11,20 @@ import {
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 
-// Helper function to fetch coordinates using OpenStreetMap’s Nominatim API
+interface Ride {
+  id: number;
+  driver: string;
+  from: string;
+  to: string;
+  date: string;
+  time: string;
+  seats: number;
+  avatar: string;
+  isFemaleIdentifying?: boolean;
+  is2SLgbtqia?: boolean;
+}
+
+// Helper function to fetch coordinates using OpenStreetMap's Nominatim API
 async function getCoordinates(location) {
   const response = await fetch(
     `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
@@ -31,7 +44,7 @@ export default function RideDetails() {
   const [fromCoords, setFromCoords] = useState(null);
   const [toCoords, setToCoords] = useState(null);
 
-  const rides = getRides();
+  const rides = getRides() as Ride[];
   const ride = rides.find((r) => r.id === Number(id));
 
   // Fetch map coordinates for both locations when component loads
@@ -119,7 +132,7 @@ export default function RideDetails() {
               <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold text-2xl">
                 {ride.avatar}
               </div>
-              <div>
+              <div className="flex-1">
                 <h2 className="text-2xl font-semibold text-gray-800">
                   {ride.driver}
                 </h2>
@@ -129,6 +142,58 @@ export default function RideDetails() {
                     4.9 (47 reviews)
                   </span>
                 </div>
+              </div>
+            </div>
+
+            {/* Identity Tags Section */}
+            {(ride.isFemaleIdentifying || ride.is2SLgbtqia) && (
+              <div className="mb-6 p-4 bg-gradient-to-r from-pink-50 to-purple-50 rounded-xl border-2 border-pink-200">
+                <h3 className="text-lg font-semibold text-gray-800 mb-3">
+                  🤝 Driver Profile
+                </h3>
+                <div className="flex flex-wrap gap-3">
+                  {ride.isFemaleIdentifying && (
+                    <div className="flex items-center gap-2 px-4 py-2 bg-pink-100 rounded-lg border border-pink-300">
+                      <span className="text-2xl">👩</span>
+                      <div>
+                        <p className="font-semibold text-pink-900">Female-Identifying Driver</p>
+                        <p className="text-sm text-pink-700">Driver identifies as female</p>
+                      </div>
+                    </div>
+                  )}
+                  {ride.is2SLgbtqia && (
+                    <div className="flex items-center gap-2 px-4 py-2 bg-purple-100 rounded-lg border border-purple-300">
+                      <span className="text-2xl">🌈</span>
+                      <div>
+                        <p className="font-semibold text-purple-900">2SLGBTQIA+ Friendly</p>
+                        <p className="text-sm text-purple-700">Safe & welcoming space</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                <p className="text-xs text-gray-600 mt-3">
+                  This ride is marked as a welcoming and inclusive space. All community members are respected and valued.
+                </p>
+              </div>
+            )}
+
+            {/* Ride Details Grid */}
+            <div className="grid md:grid-cols-2 gap-6 mb-8 pb-8 border-b border-gray-200">
+              <div>
+                <p className="text-sm text-gray-500 mb-1">Date</p>
+                <p className="text-lg font-semibold text-gray-800">📅 {ride.date}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500 mb-1">Time</p>
+                <p className="text-lg font-semibold text-gray-800">🕐 {ride.time}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500 mb-1">Available Seats</p>
+                <p className="text-lg font-semibold text-gray-800">👤 {ride.seats} seats available</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500 mb-1">Estimated Cost</p>
+                <p className="text-lg font-semibold text-gray-800">💰 $8.50 per seat</p>
               </div>
             </div>
 
@@ -243,6 +308,14 @@ export default function RideDetails() {
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition resize-none"
                 />
               </div>
+
+              {/* Safety & Preferences Info */}
+              <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <p className="text-sm text-blue-900">
+                  <span className="font-semibold">✓ Safe Ride:</span> This driver has been verified and reviewed by our community. Your safety is our priority.
+                </p>
+              </div>
+
               <button
                 onClick={handleRequestRide}
                 className="w-full px-6 py-4 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg text-lg"

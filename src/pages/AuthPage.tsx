@@ -6,6 +6,8 @@ export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [isDriver, setIsDriver] = useState(false);
+  const [isFemaleIdentifying, setIsFemaleIdentifying] = useState(false);
+  const [is2SLgbtqia, setIs2SLgbtqia] = useState(false);
   const [idUploaded, setIdUploaded] = useState(false);
   const [insuranceUploaded, setInsuranceUploaded] = useState(false);
   const [licenseUploaded, setLicenseUploaded] = useState(false);
@@ -23,7 +25,10 @@ export default function AuthPage() {
     vehicleType: '',
     insuranceFile: null,
     insuranceProvider: '',
-    policyNumber: ''
+    policyNumber: '',
+    femaleIdentifying: false,
+    lgbtqiaIdentifying: false,
+    lgbtqiaIdentity: ''
   });
 
   const handleChange = (e) => {
@@ -269,6 +274,89 @@ export default function AuthPage() {
                       required
                     />
                   </label>
+                </div>
+
+                {/* Identity & Preferences Section */}
+                <div className="border-2 border-pink-200 rounded-lg p-6 bg-pink-50">
+                  <h3 className="text-lg font-bold text-gray-800 mb-4">Identity & Safety Preferences (Optional)</h3>
+                  <p className="text-sm text-gray-600 mb-4">This information helps us provide a safer and more inclusive community. All information is kept confidential.</p>
+
+                  {/* Female Identifying Checkbox */}
+                  <div className="flex items-center gap-3 p-4 bg-white rounded-lg border-2 border-pink-300 mb-4">
+                    <input
+                      type="checkbox"
+                      id="femaleIdentifying"
+                      checked={isFemaleIdentifying}
+                      onChange={(e) => {
+                        setIsFemaleIdentifying(e.target.checked);
+                        setFormData(prev => ({
+                          ...prev,
+                          femaleIdentifying: e.target.checked
+                        }));
+                      }}
+                      className="w-5 h-5 text-pink-600 rounded focus:ring-2 focus:ring-pink-600 cursor-pointer"
+                    />
+                    <label htmlFor="femaleIdentifying" className="text-gray-800 font-semibold cursor-pointer flex-1">
+                      👩 I identify as female-identifying
+                    </label>
+                  </div>
+                  <p className="text-xs text-gray-600 ml-9 mb-4">You may be matched with female-identifying drivers for added comfort and safety</p>
+
+                  {/* 2SLGBTQIA+ Checkbox */}
+                  <div className="flex items-center gap-3 p-4 bg-white rounded-lg border-2 border-purple-300 mb-4">
+                    <input
+                      type="checkbox"
+                      id="lgbtqiaIdentifying"
+                      checked={is2SLgbtqia}
+                      onChange={(e) => {
+                        setIs2SLgbtqia(e.target.checked);
+                        setFormData(prev => ({
+                          ...prev,
+                          lgbtqiaIdentifying: e.target.checked
+                        }));
+                      }}
+                      className="w-5 h-5 text-purple-600 rounded focus:ring-2 focus:ring-purple-600 cursor-pointer"
+                    />
+                    <label htmlFor="lgbtqiaIdentifying" className="text-gray-800 font-semibold cursor-pointer flex-1">
+                      🌈 I identify as 2SLGBTQIA+
+                    </label>
+                  </div>
+
+                  {/* 2SLGBTQIA+ Identity Selection */}
+                  {is2SLgbtqia && (
+                    <div className="ml-9 mb-4 p-4 bg-purple-50 rounded-lg border-2 border-purple-200">
+                      <label className="block text-gray-700 font-semibold mb-3">Please select your identity (optional):</label>
+                      <div className="space-y-2">
+                        {[
+                          { value: 'lesbian', label: 'Lesbian' },
+                          { value: 'gay', label: 'Gay' },
+                          { value: 'bisexual', label: 'Bisexual' },
+                          { value: 'transgender', label: 'Transgender' },
+                          { value: 'non-binary', label: 'Non-Binary' },
+                          { value: 'asexual', label: 'Asexual' },
+                          { value: 'pansexual', label: 'Pansexual' },
+                          { value: 'queer', label: 'Queer' },
+                          { value: 'questioning', label: 'Questioning' },
+                          { value: 'two-spirit', label: 'Two-Spirit' },
+                          { value: 'prefer-not-to-say', label: 'Prefer Not To Say' },
+                          { value: 'other', label: 'Other' }
+                        ].map(option => (
+                          <label key={option.value} className="flex items-center gap-2 cursor-pointer">
+                            <input
+                              type="radio"
+                              name="lgbtqiaIdentity"
+                              value={option.value}
+                              checked={formData.lgbtqiaIdentity === option.value}
+                              onChange={handleChange}
+                              className="w-4 h-4 text-purple-600"
+                            />
+                            <span className="text-gray-700">{option.label}</span>
+                          </label>
+                        ))}
+                      </div>
+                      <p className="text-xs text-gray-600 mt-3">This helps us connect you with like-minded community members and offer inclusive safety features</p>
+                    </div>
+                  )}
                 </div>
 
                 {/* Driver Checkbox */}

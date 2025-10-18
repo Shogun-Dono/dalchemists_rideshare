@@ -399,6 +399,7 @@ export default function AboutPage() {
           <button className="inline-block bg-gradient-to-r from-indigo-600 to-blue-600 text-white px-10 py-4 rounded-xl font-semibold text-lg hover:shadow-xl transition-all hover:from-indigo-700 hover:to-blue-700">
              <Link
               to="/auth"
+              onClick={() => window.scrollTo(0, 0)}
               className="text-white no-underline hover:text-indigo-100 transition-colors"
             >Get Started Today →</Link>
           </button>

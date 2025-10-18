@@ -2,6 +2,18 @@ import { useState } from "react";
 import { getRides, subscribeToRides, addRide } from "./UserDashboard";
 import Navbar from "../components/NavBar";
 
+interface ExtendedRide {
+  id: number;
+  driver: string;
+  from: string;
+  to: string;
+  date: string;
+  time: string;
+  seats: number;
+  avatar: string;
+  isFemaleIdentifying?: boolean;
+  is2SLgbtqia?: boolean;
+}
 
 export default function DriverDashboard() {
   const [rideFrom, setRideFrom] = useState("");
@@ -9,6 +21,8 @@ export default function DriverDashboard() {
   const [rideDate, setRideDate] = useState("");
   const [rideTime, setRideTime] = useState("");
   const [rideSeats, setRideSeats] = useState<number>(1);
+  const [isFemaleIdentifying, setIsFemaleIdentifying] = useState(false);
+  const [is2SLgbtqia, setIs2SLgbtqia] = useState(false);
   const [, setUpdateTrigger] = useState(0);
 
   useState(() => {
@@ -18,7 +32,7 @@ export default function DriverDashboard() {
     return unsubscribe;
   });
 
-  const rides = getRides();
+  const rides = getRides() as ExtendedRide[];
   const myPostedRides = rides.filter((ride) => ride.driver === "You");
 
   const driverStats = [
@@ -58,7 +72,7 @@ export default function DriverDashboard() {
       return;
     }
 
-    const newRide = {
+    const newRide: ExtendedRide = {
       id: Date.now(),
       driver: "You",
       from: rideFrom,
@@ -70,6 +84,8 @@ export default function DriverDashboard() {
       time: rideTime,
       seats: rideSeats,
       avatar: "U",
+      isFemaleIdentifying,
+      is2SLgbtqia,
     };
 
     addRide(newRide);
@@ -78,6 +94,8 @@ export default function DriverDashboard() {
     setRideDate("");
     setRideTime("");
     setRideSeats(1);
+    setIsFemaleIdentifying(false);
+    setIs2SLgbtqia(false);
     alert("Ride posted successfully!");
   };
 
@@ -131,7 +149,7 @@ export default function DriverDashboard() {
               <span className="text-2xl">🚗</span>
               Post a New Ride
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   From
@@ -192,6 +210,43 @@ export default function DriverDashboard() {
                 />
               </div>
             </div>
+
+            {/* Identity & Safety Preferences */}
+            <div className="border-2 border-pink-200 rounded-lg p-6 bg-pink-50 mb-6">
+              <h3 className="text-lg font-bold text-gray-800 mb-4">Ride Preferences (Optional)</h3>
+              <p className="text-sm text-gray-600 mb-4">These tags help create a safe and inclusive community:</p>
+              
+              <div className="space-y-3">
+                <div className="flex items-center gap-3">
+                  <input
+                    type="checkbox"
+                    id="driverFemaleIdentifying"
+                    checked={isFemaleIdentifying}
+                    onChange={(e) => setIsFemaleIdentifying(e.target.checked)}
+                    className="w-5 h-5 text-pink-600 rounded focus:ring-2 focus:ring-pink-600 cursor-pointer"
+                  />
+                  <label htmlFor="driverFemaleIdentifying" className="text-gray-800 font-semibold cursor-pointer flex items-center gap-2">
+                    👩 Female-identifying driver
+                    <span className="text-xs bg-pink-200 text-pink-700 px-2 py-1 rounded-full">Tag visible to riders</span>
+                  </label>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <input
+                    type="checkbox"
+                    id="driver2SLgbtqia"
+                    checked={is2SLgbtqia}
+                    onChange={(e) => setIs2SLgbtqia(e.target.checked)}
+                    className="w-5 h-5 text-purple-600 rounded focus:ring-2 focus:ring-purple-600 cursor-pointer"
+                  />
+                  <label htmlFor="driver2SLgbtqia" className="text-gray-800 font-semibold cursor-pointer flex items-center gap-2">
+                    🌈 2SLGBTQIA+ friendly ride
+                    <span className="text-xs bg-purple-200 text-purple-700 px-2 py-1 rounded-full">Tag visible to riders</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
             <div className="mt-6">
               <button
                 onClick={handlePostRide}
@@ -241,6 +296,23 @@ export default function DriverDashboard() {
                         Active
                       </span>
                     </div>
+
+                    {/* Identity Tags */}
+                    {(ride.isFemaleIdentifying || ride.is2SLgbtqia) && (
+                      <div className="flex gap-2 mb-4">
+                        {ride.isFemaleIdentifying && (
+                          <span className="inline-flex items-center gap-1 px-3 py-1 bg-pink-100 text-pink-700 text-xs font-semibold rounded-full">
+                            👩 Female Driver
+                          </span>
+                        )}
+                        {ride.is2SLgbtqia && (
+                          <span className="inline-flex items-center gap-1 px-3 py-1 bg-purple-100 text-purple-700 text-xs font-semibold rounded-full">
+                            🌈 LGBTQIA+ Friendly
+                          </span>
+                        )}
+                      </div>
+                    )}
+
                     <div className="space-y-2">
                       <div className="flex items-center gap-2 text-gray-700">
                         <span className="text-green-600">📍</span>
@@ -292,11 +364,10 @@ export default function DriverDashboard() {
               </div>
               <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
                 <h3 className="font-semibold text-gray-800 mb-2">
-                  Communicate
+                  Create Inclusive Rides
                 </h3>
                 <p className="text-sm text-gray-600">
-                  Keep passengers informed about any changes or delays to ensure
-                  a smooth experience.
+                  Use identity tags to help create a welcoming space for all community members.
                 </p>
               </div>
             </div>

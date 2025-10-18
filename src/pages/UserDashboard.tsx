@@ -11,6 +11,8 @@ interface Ride {
   time: string;
   seats: number;
   avatar: string;
+  isFemaleIdentifying?: boolean;
+  is2SLgbtqia?: boolean;
 }
 
 // In-memory storage for rides
@@ -24,6 +26,8 @@ let ridesStore: Ride[] = [
     time: "8:00 AM",
     seats: 3,
     avatar: "SM",
+    isFemaleIdentifying: true,
+    is2SLgbtqia: false,
   },
   {
     id: 2,
@@ -34,6 +38,8 @@ let ridesStore: Ride[] = [
     time: "9:30 AM",
     seats: 2,
     avatar: "JK",
+    isFemaleIdentifying: false,
+    is2SLgbtqia: true,
   },
   {
     id: 3,
@@ -44,6 +50,8 @@ let ridesStore: Ride[] = [
     time: "7:15 AM",
     seats: 4,
     avatar: "MR",
+    isFemaleIdentifying: true,
+    is2SLgbtqia: true,
   },
   {
     id: 4,
@@ -54,6 +62,8 @@ let ridesStore: Ride[] = [
     time: "2:00 PM",
     seats: 2,
     avatar: "AT",
+    isFemaleIdentifying: false,
+    is2SLgbtqia: false,
   },
 ];
 
@@ -215,6 +225,23 @@ export default function UserDashboard() {
                       </div>
                     </div>
                   </div>
+
+                  {/* Identity Tags */}
+                  {(ride.isFemaleIdentifying || ride.is2SLgbtqia) && (
+                    <div className="flex gap-2 mb-4 flex-wrap">
+                      {ride.isFemaleIdentifying && (
+                        <span className="inline-flex items-center gap-1 px-3 py-1 bg-pink-100 text-pink-700 text-xs font-semibold rounded-full">
+                          👩 Female Driver
+                        </span>
+                      )}
+                      {ride.is2SLgbtqia && (
+                        <span className="inline-flex items-center gap-1 px-3 py-1 bg-purple-100 text-purple-700 text-xs font-semibold rounded-full">
+                          🌈 LGBTQIA+ Friendly
+                        </span>
+                      )}
+                    </div>
+                  )}
+
                   <div className="space-y-2">
                     <div className="flex items-center gap-2 text-gray-700">
                       <span className="text-green-600">📍</span>
