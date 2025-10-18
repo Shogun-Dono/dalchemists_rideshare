@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Edit2, Save, X, Star, Award, TrendingUp, MapPin, Phone, Mail, Shield, LogOut } from 'lucide-react';
 import Navbar from "../components/NavBar";
+import QRCodePopup from "../components/QRCodePopup";
 
 export default function ProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
@@ -302,10 +303,10 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
-
+      <QRCodePopup></QRCodePopup>
       {/* Footer */}
       <div className="text-center py-8 text-indigo-100 border-t border-white border-opacity-20 mt-12">
-        <p>© 2025 NSMove. Building a sustainable future for Nova Scotia.</p>
+        <p>© 2025 NSMove. Building a sustainable future together.</p>
       </div>
     </div>
   );

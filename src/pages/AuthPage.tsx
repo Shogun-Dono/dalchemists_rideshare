@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Mail, Lock, User, Upload, Check, Eye, EyeOff } from 'lucide-react';
 import NavBar from '../components/NavBar';
+import QRCodePopup from "../components/QRCodePopup";
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(false);
@@ -297,7 +298,7 @@ export default function AuthPage() {
                       className="w-5 h-5 text-pink-600 rounded focus:ring-2 focus:ring-pink-600 cursor-pointer"
                     />
                     <label htmlFor="femaleIdentifying" className="text-gray-800 font-semibold cursor-pointer flex-1">
-                      👩 I identify as female-identifying
+                      👩 I identify as female
                     </label>
                   </div>
                   <p className="text-xs text-gray-600 ml-9 mb-4">You may be matched with female-identifying drivers for added comfort and safety</p>
@@ -506,6 +507,7 @@ export default function AuthPage() {
             By continuing, you agree to our Terms of Service and Privacy Policy
           </p>
         </div>
+        <QRCodePopup></QRCodePopup>
          {/* Footer */}
             <div className="text-center py-8 text-indigo-100 border-t border-white border-opacity-20 mt-12">
                 <p>© 2025 NS Move. Building a sustainable future together.</p>

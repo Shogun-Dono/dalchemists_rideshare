@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { getRides, subscribeToRides, addRide } from "./UserDashboard";
 import Navbar from "../components/NavBar";
+import QRCodePopup from "../components/QRCodePopup";
 
 interface ExtendedRide {
   id: number;
@@ -13,6 +14,11 @@ interface ExtendedRide {
   avatar: string;
   isFemaleIdentifying?: boolean;
   is2SLgbtqia?: boolean;
+  rideType: 'one-time' | 'recurring';
+  recurringDays?: string[];
+  endDate?: string;
+  isGroceryRun?: boolean;
+  shoppingDuration?: number;
 }
 
 export default function DriverDashboard() {
@@ -21,8 +27,13 @@ export default function DriverDashboard() {
   const [rideDate, setRideDate] = useState("");
   const [rideTime, setRideTime] = useState("");
   const [rideSeats, setRideSeats] = useState<number>(1);
+  const [rideType, setRideType] = useState<'one-time' | 'recurring'>('one-time');
+  const [recurringDays, setRecurringDays] = useState<string[]>([]);
+  const [endDate, setEndDate] = useState("");
   const [isFemaleIdentifying, setIsFemaleIdentifying] = useState(false);
   const [is2SLgbtqia, setIs2SLgbtqia] = useState(false);
+  const [isGroceryRun, setIsGroceryRun] = useState(false);
+  const [shoppingDuration, setShoppingDuration] = useState<number>(30);
   const [, setUpdateTrigger] = useState(0);
 
   useState(() => {
@@ -34,6 +45,8 @@ export default function DriverDashboard() {
 
   const rides = getRides() as ExtendedRide[];
   const myPostedRides = rides.filter((ride) => ride.driver === "You");
+  const recurringRides = myPostedRides.filter(ride => ride.rideType === 'recurring');
+  const oneTimeRides = myPostedRides.filter(ride => ride.rideType === 'one-time');
 
   const driverStats = [
     {
@@ -66,9 +79,27 @@ export default function DriverDashboard() {
     },
   ];
 
+  const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+  const toggleDay = (day: string) => {
+    setRecurringDays(prev =>
+      prev.includes(day) ? prev.filter(d => d !== day) : [...prev, day]
+    );
+  };
+
   const handlePostRide = () => {
-    if (!rideFrom || !rideTo || !rideDate || !rideTime) {
+    if (!rideFrom || !rideTo || !rideTime) {
       alert("Please fill in all ride details before posting.");
+      return;
+    }
+
+    if (rideType === 'one-time' && !rideDate) {
+      alert("Please select a date for your one-time ride.");
+      return;
+    }
+
+    if (rideType === 'recurring' && recurringDays.length === 0) {
+      alert("Please select at least one day for your recurring ride.");
       return;
     }
 
@@ -77,27 +108,117 @@ export default function DriverDashboard() {
       driver: "You",
       from: rideFrom,
       to: rideTo,
-      date: new Date(rideDate).toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-      }),
+      date: rideType === 'one-time' 
+        ? new Date(rideDate).toLocaleDateString("en-US", { month: "short", day: "numeric" })
+        : recurringDays.slice(0, 3).join(', ') + (recurringDays.length > 3 ? '...' : ''),
       time: rideTime,
       seats: rideSeats,
       avatar: "U",
       isFemaleIdentifying,
       is2SLgbtqia,
+      rideType,
+      recurringDays: rideType === 'recurring' ? recurringDays : undefined,
+      endDate: rideType === 'recurring' ? endDate : undefined,
+      isGroceryRun,
+      shoppingDuration: isGroceryRun ? shoppingDuration : undefined,
     };
 
     addRide(newRide);
+    
+    // Reset form
     setRideFrom("");
     setRideTo("");
     setRideDate("");
     setRideTime("");
     setRideSeats(1);
+    setRideType('one-time');
+    setRecurringDays([]);
+    setEndDate("");
     setIsFemaleIdentifying(false);
     setIs2SLgbtqia(false);
-    alert("Ride posted successfully!");
+    setIsGroceryRun(false);
+    setShoppingDuration(30);
+    
+    alert(`${rideType === 'recurring' ? 'Recurring' : 'One-time'} ride posted successfully!`);
   };
+
+  const RideCard = ({ ride }: { ride: ExtendedRide }) => (
+    <div className="border border-gray-200 rounded-xl p-5 hover:shadow-md transition-shadow bg-gradient-to-r from-white to-indigo-50">
+      <div className="flex items-start justify-between mb-4">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+            {ride.avatar}
+          </div>
+          <div>
+            <p className="font-semibold text-gray-800">{ride.driver}</p>
+            <p className="text-sm text-gray-500 flex items-center gap-1">
+              <span>👤</span>
+              {ride.seats} seats available
+            </p>
+          </div>
+        </div>
+        <span className={`px-3 py-1 text-xs font-semibold rounded-full ${
+          ride.rideType === 'recurring' 
+            ? 'bg-purple-100 text-purple-700' 
+            : 'bg-green-100 text-green-700'
+        }`}>
+          {ride.rideType === 'recurring' ? '🔄 Recurring' : '✓ One-Time'}
+        </span>
+      </div>
+
+      <div className="flex flex-wrap gap-2 mb-4">
+        {ride.isFemaleIdentifying && (
+          <span className="inline-flex items-center gap-1 px-3 py-1 bg-pink-100 text-pink-700 text-xs font-semibold rounded-full">
+            👩 Female Driver
+          </span>
+        )}
+        {ride.is2SLgbtqia && (
+          <span className="inline-flex items-center gap-1 px-3 py-1 bg-purple-100 text-purple-700 text-xs font-semibold rounded-full">
+            🌈 LGBTQIA+ Friendly
+          </span>
+        )}
+        {ride.isGroceryRun && (
+          <span className="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">
+            🛒 Grocery Shop ({ride.shoppingDuration} min)
+          </span>
+        )}
+      </div>
+
+      <div className="space-y-2">
+        <div className="flex items-center gap-2 text-gray-700">
+          <span className="text-green-600">📍</span>
+          <span className="font-medium">From: {ride.from}</span>
+        </div>
+        <div className="flex items-center gap-2 text-gray-700">
+          <span className="text-red-600">📍</span>
+          <span className="font-medium">To: {ride.to}</span>
+        </div>
+        <div className="flex items-center gap-4 text-sm text-gray-600 pt-2">
+          <span className="flex items-center gap-1">
+            <span>🕐</span>
+            {ride.time}
+          </span>
+          {ride.rideType === 'one-time' && (
+            <span className="flex items-center gap-1">
+              <span>📅</span>
+              {ride.date}
+            </span>
+          )}
+        </div>
+        {ride.rideType === 'recurring' && (
+          <div className="text-sm text-gray-600 pt-2">
+            <span className="flex items-center gap-1">
+              <span>📅</span>
+              {ride.recurringDays?.join(', ')}
+            </span>
+            {ride.endDate && (
+              <span className="text-xs text-gray-500">Until: {ride.endDate}</span>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
 
   return (
     <>
@@ -149,6 +270,36 @@ export default function DriverDashboard() {
               <span className="text-2xl">🚗</span>
               Post a New Ride
             </h2>
+
+            {/* Ride Type Selection */}
+            <div className="mb-6 p-4 bg-blue-50 rounded-lg border-2 border-blue-200">
+              <label className="block text-sm font-semibold text-gray-800 mb-3">Ride Type</label>
+              <div className="flex gap-4">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="rideType"
+                    value="one-time"
+                    checked={rideType === 'one-time'}
+                    onChange={(e) => setRideType(e.target.value as 'one-time' | 'recurring')}
+                    className="w-4 h-4"
+                  />
+                  <span className="text-gray-700 font-medium">✓ One-Time Ride</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="rideType"
+                    value="recurring"
+                    checked={rideType === 'recurring'}
+                    onChange={(e) => setRideType(e.target.value as 'one-time' | 'recurring')}
+                    className="w-4 h-4"
+                  />
+                  <span className="text-gray-700 font-medium">🔄 Recurring Ride</span>
+                </label>
+              </div>
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -176,17 +327,6 @@ export default function DriverDashboard() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Date
-                </label>
-                <input
-                  type="date"
-                  value={rideDate}
-                  onChange={(e) => setRideDate(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
                   Time
                 </label>
                 <input
@@ -196,6 +336,21 @@ export default function DriverDashboard() {
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
                 />
               </div>
+
+              {rideType === 'one-time' && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Date
+                  </label>
+                  <input
+                    type="date"
+                    value={rideDate}
+                    onChange={(e) => setRideDate(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
+                  />
+                </div>
+              )}
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Available Seats
@@ -209,6 +364,76 @@ export default function DriverDashboard() {
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
                 />
               </div>
+            </div>
+
+            {/* Recurring Days Selection */}
+            {rideType === 'recurring' && (
+              <div className="mb-6 p-4 bg-purple-50 rounded-lg border-2 border-purple-200">
+                <label className="block text-sm font-semibold text-gray-800 mb-3">Select Days</label>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4">
+                  {daysOfWeek.map(day => (
+                    <label key={day} className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={recurringDays.includes(day)}
+                        onChange={() => toggleDay(day)}
+                        className="w-4 h-4 text-purple-600 rounded"
+                      />
+                      <span className="text-gray-700">{day}</span>
+                    </label>
+                  ))}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    End Date (Optional)
+                  </label>
+                  <input
+                    type="date"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
+                    placeholder="Leave empty for ongoing rides"
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Grocery Run Toggle */}
+            <div className="mb-6 p-4 bg-green-50 rounded-lg border-2 border-green-200">
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={isGroceryRun}
+                  onChange={(e) => setIsGroceryRun(e.target.checked)}
+                  className="w-5 h-5 text-green-600 rounded focus:ring-2 focus:ring-green-600"
+                />
+                <span className="text-gray-800 font-semibold">🛒 This is a grocery run!</span>
+              </label>
+              <p className="text-sm text-gray-600 mt-2 ml-8">Riders can join you for shopping!</p>
+
+              {isGroceryRun && (
+                <div className="mt-4 ml-8">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Shopping Duration
+                  </label>
+                  <div className="flex items-center gap-4">
+                    <input
+                      type="range"
+                      min={15}
+                      max={120}
+                      step={15}
+                      value={shoppingDuration}
+                      onChange={(e) => setShoppingDuration(Number(e.target.value))}
+                      className="flex-1"
+                    />
+                    <span className="text-lg font-semibold text-green-700 w-16">
+                      {shoppingDuration} min
+                    </span>
+                  </div>
+                  <p className="text-xs text-gray-600 mt-2">How long will you shop?</p>
+                </div>
+              )}
             </div>
 
             {/* Identity & Safety Preferences */}
@@ -257,122 +482,50 @@ export default function DriverDashboard() {
             </div>
           </div>
 
-          {/* My Posted Rides */}
-          <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
-              <span className="text-2xl">📋</span>
-              My Posted Rides
-            </h2>
-            {myPostedRides.length === 0 ? (
-              <div className="text-center py-12 text-gray-500">
-                <p className="text-lg mb-2">No rides posted yet</p>
-                <p className="text-sm">
-                  Post your first ride above to get started!
-                </p>
-              </div>
-            ) : (
+          {/* Recurring Rides */}
+          {recurringRides.length > 0 && (
+            <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
+              <h2 className="text-2xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
+                <span className="text-2xl">🔄</span>
+                Recurring Rides ({recurringRides.length})
+              </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {myPostedRides.map((ride) => (
-                  <div
-                    key={ride.id}
-                    className="border border-gray-200 rounded-xl p-5 hover:shadow-md transition-shadow bg-gradient-to-r from-white to-indigo-50"
-                  >
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
-                          {ride.avatar}
-                        </div>
-                        <div>
-                          <p className="font-semibold text-gray-800">
-                            {ride.driver}
-                          </p>
-                          <p className="text-sm text-gray-500 flex items-center gap-1">
-                            <span>👤</span>
-                            {ride.seats} seats available
-                          </p>
-                        </div>
-                      </div>
-                      <span className="px-3 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">
-                        Active
-                      </span>
-                    </div>
-
-                    {/* Identity Tags */}
-                    {(ride.isFemaleIdentifying || ride.is2SLgbtqia) && (
-                      <div className="flex gap-2 mb-4">
-                        {ride.isFemaleIdentifying && (
-                          <span className="inline-flex items-center gap-1 px-3 py-1 bg-pink-100 text-pink-700 text-xs font-semibold rounded-full">
-                            👩 Female Driver
-                          </span>
-                        )}
-                        {ride.is2SLgbtqia && (
-                          <span className="inline-flex items-center gap-1 px-3 py-1 bg-purple-100 text-purple-700 text-xs font-semibold rounded-full">
-                            🌈 LGBTQIA+ Friendly
-                          </span>
-                        )}
-                      </div>
-                    )}
-
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2 text-gray-700">
-                        <span className="text-green-600">📍</span>
-                        <span className="font-medium">From: {ride.from}</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-gray-700">
-                        <span className="text-red-600">📍</span>
-                        <span className="font-medium">To: {ride.to}</span>
-                      </div>
-                      <div className="flex items-center gap-4 text-sm text-gray-600 pt-2">
-                        <span className="flex items-center gap-1">
-                          <span>📅</span>
-                          {ride.date}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <span>🕐</span>
-                          {ride.time}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
+                {recurringRides.map((ride) => (
+                  <RideCard key={ride.id} ride={ride} />
                 ))}
               </div>
-            )}
-          </div>
+            </div>
+          )}
 
-          {/* Tips Section */}
-          <div className="bg-white rounded-2xl shadow-lg p-8">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
-              <span className="text-2xl">💡</span>
-              Driver Tips
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                <h3 className="font-semibold text-gray-800 mb-2">
-                  Be Punctual
-                </h3>
-                <p className="text-sm text-gray-600">
-                  Arrive on time to build trust and maintain a good rating with
-                  your passengers.
-                </p>
-              </div>
-              <div className="p-4 bg-green-50 rounded-lg border border-green-200">
-                <h3 className="font-semibold text-gray-800 mb-2">Stay Safe</h3>
-                <p className="text-sm text-gray-600">
-                  Always verify passenger details and follow safety guidelines
-                  for a secure ride.
-                </p>
-              </div>
-              <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
-                <h3 className="font-semibold text-gray-800 mb-2">
-                  Create Inclusive Rides
-                </h3>
-                <p className="text-sm text-gray-600">
-                  Use identity tags to help create a welcoming space for all community members.
-                </p>
+          {/* One-Time Rides */}
+          {oneTimeRides.length > 0 && (
+            <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
+              <h2 className="text-2xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
+                <span className="text-2xl">✓</span>
+                One-Time Rides ({oneTimeRides.length})
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {oneTimeRides.map((ride) => (
+                  <RideCard key={ride.id} ride={ride} />
+                ))}
               </div>
             </div>
-          </div>
+          )}
+
+          {myPostedRides.length === 0 && (
+            <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
+              <p className="text-lg text-gray-500 mb-2">No rides posted yet</p>
+              <p className="text-sm text-gray-600">Post your first ride above to get started!</p>
+            </div>
+          )}
+      <QRCodePopup></QRCodePopup>
+      <div className="text-center mt-12 text-indigo-100">
+          <p>
+            © 2025 NS Move. Building a sustainable future together.
+          </p>
         </div>
+        </div>
+        
       </div>
     </>
   );
