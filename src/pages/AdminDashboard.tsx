@@ -27,7 +27,6 @@ interface HeatmapData {
 
 type ViewType = "map" | "bar" | "pie" | "line" | "histogram";
 
-// Modular Chart Components
 const RidesByAreaChart = ({ data }: { data: any[] }) => (
   <div>
     <h2 className="text-2xl font-semibold text-gray-800 mb-4">Rides by Area</h2>
@@ -122,9 +121,10 @@ const DistanceHistogramChart = ({ data }: { data: any[] }) => (
 
 const InteractiveHeatmap = ({ data }: { data: HeatmapData[] }) => {
   const mapRef = useRef<L.Map | null>(null);
+  const mapContainerRef = useRef<HTMLDivElement | null>(null);
+  const [viewMode, setViewMode] = useState<"all" | "from" | "to">("all");
 
   useEffect(() => {
-    // Load Leaflet CSS dynamically if needed
     if (!document.getElementById("leaflet-css")) {
       const link = document.createElement("link");
       link.id = "leaflet-css";
@@ -133,9 +133,8 @@ const InteractiveHeatmap = ({ data }: { data: HeatmapData[] }) => {
       document.head.appendChild(link);
     }
 
-    // Initialize map only once
-    if (!mapRef.current) {
-      mapRef.current = L.map("map", {
+    if (mapContainerRef.current && !mapRef.current) {
+      mapRef.current = L.map(mapContainerRef.current, {
         center: [44.6488, -63.5752],
         zoom: 11,
         scrollWheelZoom: true,
@@ -145,8 +144,8 @@ const InteractiveHeatmap = ({ data }: { data: HeatmapData[] }) => {
         attribution: "© OpenStreetMap contributors",
         maxZoom: 19,
       }).addTo(mapRef.current);
-    } else {
-      // Clear existing circles and markers before re-adding
+    } else if (mapRef.current) {
+      // Remove old circles and markers but keep base tile layer
       mapRef.current.eachLayer((layer) => {
         if (layer instanceof L.Circle || layer instanceof L.CircleMarker) {
           mapRef.current!.removeLayer(layer);
@@ -154,16 +153,50 @@ const InteractiveHeatmap = ({ data }: { data: HeatmapData[] }) => {
       });
     }
 
-    // Add markers and heat circles
-    data.forEach((point) => {
+    // Datasets for filtering
+    const ridesFromPoints: HeatmapData[] = [
+      {
+        area: "Downtown Halifax",
+        lat: 44.6488,
+        lng: -63.5752,
+        rides: 450,
+        intensity: 90,
+      },
+      { area: "South End", lat: 44.63, lng: -63.57, rides: 280, intensity: 56 },
+      {
+        area: "Clayton Park",
+        lat: 44.657,
+        lng: -63.637,
+        rides: 240,
+        intensity: 48,
+      },
+    ];
+
+    const ridesToPoints: HeatmapData[] = [
+      { area: "North End", lat: 44.66, lng: -63.59, rides: 320, intensity: 64 },
+      {
+        area: "Dartmouth",
+        lat: 44.671,
+        lng: -63.569,
+        rides: 380,
+        intensity: 76,
+      },
+      { area: "Bedford", lat: 44.729, lng: -63.647, rides: 190, intensity: 38 },
+    ];
+
+    let filteredPoints: HeatmapData[] = data;
+    if (viewMode === "from") filteredPoints = ridesFromPoints;
+    else if (viewMode === "to") filteredPoints = ridesToPoints;
+
+    filteredPoints.forEach((point) => {
       const color = getHeatColor(point.intensity);
       const radius = 200 + point.intensity * 10;
 
       L.circle([point.lat, point.lng], {
-        color: color,
+        color,
         fillColor: color,
         fillOpacity: 0.3,
-        radius: radius,
+        radius,
         weight: 2,
       }).addTo(mapRef.current!);
 
@@ -184,22 +217,21 @@ const InteractiveHeatmap = ({ data }: { data: HeatmapData[] }) => {
         </div>
       `);
 
-      marker.on("mouseover", () => {
-        marker.openPopup();
-      });
+      marker.on("mouseover", () => marker.openPopup());
     });
 
-    // Fix map on resize or container change
     setTimeout(() => mapRef.current!.invalidateSize(), 100);
 
-    // Cleanup on component unmount
     return () => {
       if (mapRef.current) {
-        mapRef.current.remove();
-        mapRef.current = null;
+        mapRef.current.eachLayer((layer) => {
+          if (layer instanceof L.Circle || layer instanceof L.CircleMarker) {
+            mapRef.current!.removeLayer(layer);
+          }
+        });
       }
     };
-  }, [data]);
+  }, [data, viewMode]);
 
   const getHeatColor = (intensity: number) => {
     if (intensity >= 70) return "#dc2626";
@@ -209,19 +241,65 @@ const InteractiveHeatmap = ({ data }: { data: HeatmapData[] }) => {
   };
 
   return (
-    <div>
+    <div style={{ position: "relative" }}>
       <h2 className="text-2xl font-semibold text-gray-800 mb-4">
         Interactive Ride Activity Heatmap
       </h2>
+
       <div
-        id="map"
+        ref={mapContainerRef}
         style={{
           height: "600px",
           borderRadius: "8px",
           border: "2px solid #e5e7eb",
           width: "100%",
         }}
-      ></div>
+      />
+
+      {/* Buttons to toggle heatmap mode */}
+      <div
+        style={{
+          position: "absolute",
+          top: "120px",
+          right: "30px",
+          display: "flex",
+          flexDirection: "column",
+          gap: "10px",
+          zIndex: 1000,
+        }}
+      >
+        <button
+          onClick={() => setViewMode("all")}
+          className={`px-4 py-2 rounded-lg font-semibold ${
+            viewMode === "all"
+              ? "bg-purple-600 text-white"
+              : "bg-white text-gray-800 shadow-md"
+          }`}
+        >
+          All Rides
+        </button>
+        <button
+          onClick={() => setViewMode("from")}
+          className={`px-4 py-2 rounded-lg font-semibold ${
+            viewMode === "from"
+              ? "bg-purple-600 text-white"
+              : "bg-white text-gray-800 shadow-md"
+          }`}
+        >
+          Rides From
+        </button>
+        <button
+          onClick={() => setViewMode("to")}
+          className={`px-4 py-2 rounded-lg font-semibold ${
+            viewMode === "to"
+              ? "bg-purple-600 text-white"
+              : "bg-white text-gray-800 shadow-md"
+          }`}
+        >
+          Rides To
+        </button>
+      </div>
+
       <div className="mt-4 p-4 bg-gray-50 rounded-lg">
         <p className="text-sm text-gray-600">
           <strong>💡 Tip:</strong> Click and drag to pan. Scroll to zoom. Hover
@@ -232,28 +310,28 @@ const InteractiveHeatmap = ({ data }: { data: HeatmapData[] }) => {
             <div
               className="w-4 h-4 rounded-full"
               style={{ backgroundColor: "#22c55e" }}
-            ></div>
+            />
             <span>Low (0-30)</span>
           </div>
           <div className="flex items-center gap-2">
             <div
               className="w-4 h-4 rounded-full"
               style={{ backgroundColor: "#eab308" }}
-            ></div>
+            />
             <span>Medium (30-50)</span>
           </div>
           <div className="flex items-center gap-2">
             <div
               className="w-4 h-4 rounded-full"
               style={{ backgroundColor: "#f97316" }}
-            ></div>
+            />
             <span>High (50-70)</span>
           </div>
           <div className="flex items-center gap-2">
             <div
               className="w-4 h-4 rounded-full"
               style={{ backgroundColor: "#dc2626" }}
-            ></div>
+            />
             <span>Very High (70+)</span>
           </div>
         </div>
@@ -268,7 +346,6 @@ function AdminDashboard() {
   const [timeRange, setTimeRange] = useState("week");
   const [activeView, setActiveView] = useState<ViewType>("map");
 
-  // Halifax neighborhoods data
   const heatmapData: HeatmapData[] = [
     {
       area: "Downtown Halifax",
@@ -341,10 +418,9 @@ function AdminDashboard() {
 
   return (
     <>
-    <Navbar></Navbar>
+      <Navbar />
       <div className="min-h-screen bg-gray-50 p-6">
         <div className="max-w-7xl mx-auto">
-          {/* Header */}
           <div className="mb-6">
             <h1 className="text-4xl font-bold text-gray-800 mb-2">
               Admin Dashboard
@@ -354,7 +430,6 @@ function AdminDashboard() {
             </p>
           </div>
 
-          {/* Search and Filters */}
           <div className="bg-white rounded-xl shadow-md p-6 mb-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
@@ -402,7 +477,6 @@ function AdminDashboard() {
             </div>
           </div>
 
-          {/* View Navigation Buttons */}
           <div className="bg-white rounded-xl shadow-md p-4 mb-6">
             <div className="flex flex-wrap gap-3">
               <button
@@ -458,7 +532,6 @@ function AdminDashboard() {
             </div>
           </div>
 
-          {/* Central View */}
           <div className="bg-white rounded-xl shadow-md p-6 mb-6">
             {activeView === "map" && <InteractiveHeatmap data={filteredData} />}
             {activeView === "bar" && <RidesByAreaChart data={ridesByArea} />}
@@ -473,7 +546,6 @@ function AdminDashboard() {
             )}
           </div>
 
-          {/* Summary Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="bg-white rounded-xl shadow-md p-6">
               <p className="text-gray-600 text-sm mb-1">Total Rides</p>
