@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import UserDashboard from "./pages/UserDashboard";
+import AdminPage from "./pages/AdminPage";
 import AdminDashboard from "./pages/AdminDashboard";
 import DriverDashboard from "./pages/DriverDashboard";
 import RideDetails from "./pages/RideDetails";
@@ -15,7 +16,7 @@ function App() {
   const handleRoleSelect = (role: string) => {
     if (role === "user") navigate("/auth?role=user");
     else if (role === "driver") navigate("/auth?role=driver");
-    else navigate("/admin");
+    else navigate("/adlogin");
   };
 
   return (
@@ -24,7 +25,7 @@ function App() {
         {/* Admin Button (Top-Right) */}
         <button
           onClick={() => handleRoleSelect("admin")}
-          className="absolute top-4 right-4 text-xs text-[#f0ebe1] bg-[#1d3a66] rounded-full px-3 py-1 font-semibold opacity-80 hover:opacity-100 hover:bg-[#22477a] transition-all"
+          className="absolute top-4 right-4 text-xs text-[#f0ebe1] bg-[#1d3a66] rounded-full px-3 py-1 font-semibold opacity-80 hover:opacity-100 hover:bg-[#1d3a66] transition-all"
         >
           ⚙️ Operations
         </button>
@@ -106,6 +107,7 @@ export default function AppWrapper() {
       <Route path="/user" element={<UserDashboard />} />
       <Route path="/driver" element={<DriverDashboard />} />
       <Route path="/admin" element={<AdminDashboard />} />
+      <Route path="/adlogin" element={<AdminPage />} />
       <Route path="/ride-details/:id" element={<RideDetails />} />
       <Route path="/about" element={<AboutPage />} />
       <Route path="/contact" element={<ContactPage />} />
