@@ -1,348 +1,270 @@
-import { Users, Leaf, Shield, Award, QrCode } from "lucide-react";
+import { Users, Leaf, Shield, Award } from "lucide-react";
 import Navbar from "../components/NavBar";
 import { Link } from "react-router-dom";
 import QRCodePopup from "../components/QRCodePopup";
+
 export default function AboutPage() {
+  const cardBase =
+    "rounded-3xl p-8 text-center shadow-md hover:shadow-lg transition-all transform hover:scale-105 bg-[#b8ccde] text-[#000000]";
+  const sectionDark =
+    "rounded-3xl p-12 shadow-xl bg-[#22477a] text-[#f0ebe1]";
+  const sectionLight =
+    "rounded-3xl p-12 shadow-xl bg-[#f0ebe1] text-[#000000]";
+  const valueCard =
+    "rounded-2xl p-8 shadow-md hover:shadow-lg transition-all bg-[#b8ccde]";
+  const borderBox =
+    "bg-[#f0ebe1] rounded-lg p-4 border-l-4 shadow-sm text-[#000000]";
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-600 via-purple-600 to-blue-700">
-      <Navbar></Navbar>
+    <div className="min-h-screen bg-[#f0ebe1] text-[#000000]">
+      <Navbar />
 
       {/* Hero Section */}
-      <div className="max-w-6xl mx-auto px-6 py-16">
-        <div className="text-center mb-16">
-          <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
-            About NS Move
-          </h1>
-          <p className="text-xl text-indigo-100 max-w-3xl mx-auto">
+      <div className="bg-[#22477a] text-[#f0ebe1] py-20">
+        <div className="max-w-6xl mx-auto px-6 text-center">
+          <h1 className="text-5xl md:text-6xl font-bold mb-6">About NS Move</h1>
+          <p className="text-xl max-w-3xl mx-auto opacity-90">
             Revolutionizing community transportation in Nova Scotia through
             sustainable, affordable, and reliable ridesharing.
           </p>
         </div>
+      </div>
+
+      <div className="max-w-6xl mx-auto px-6 py-16 space-y-16">
 
         {/* Mission Section */}
-        <div className="bg-white bg-opacity-95 rounded-3xl p-12 mb-12 shadow-2xl">
-          <h2 className="text-4xl font-bold text-gray-800 mb-6">Our Mission</h2>
-          <p className="text-lg text-gray-700 leading-relaxed mb-4">
+        <div className={sectionLight}>
+          <h2 className="text-4xl font-bold text-[#22477a] mb-6">
+            Our Mission
+          </h2>
+          <p className="text-lg leading-relaxed mb-4">
             NS Move is dedicated to solving the first/last-mile transportation
             challenge that affects over 12.5% of Nova Scotia families living at
             or below the poverty line. We provide an innovative,
             community-driven rideshare platform that connects commuters with
-            local drivers heading to major transit hubs like Bridge
-            Terminal—especially during winter or when walking alone feels
-            unsafe.
+            local drivers heading to major transit hubs like Bridge Terminal.
           </p>
-          <p className="text-lg text-gray-700 leading-relaxed mb-4">
+          <p className="text-lg leading-relaxed mb-4">
             Our platform prioritizes affordability, safety, and community
             connection by rewarding both riders and drivers with local vendor
-            incentives (fuel discounts, grocery rewards, etc). We believe
-            transportation access shouldn't depend on personal wealth or car
-            ownership.
+            incentives. We believe transportation access shouldn't depend on
+            personal wealth or car ownership.
           </p>
-          <p className="text-lg text-gray-700 leading-relaxed">
+          <p className="text-lg leading-relaxed">
             Founded in 2025, NS Move has grown to serve thousands of residents
-            across Nova Scotia, making every journey count towards a more
+            across Nova Scotia, making every journey count toward a more
             equitable and sustainable transportation system.
           </p>
         </div>
 
-        {/* Impact Stats Section */}
-        <div className="mb-12">
-          <h2 className="text-4xl font-bold text-white mb-8 text-center">
+        {/* Impact Section */}
+        <div className={sectionDark}>
+          <h2 className="text-4xl font-bold mb-8 text-center text-[#f0a824]">
             Our Impact This Month
           </h2>
           <div className="grid md:grid-cols-4 gap-6">
-            <div className="bg-white bg-opacity-95 rounded-3xl p-8 text-center shadow-xl hover:shadow-2xl transition-all transform hover:scale-105">
-              <div className="text-4xl mb-3">🚗</div>
-              <h3 className="text-2xl font-bold text-gray-800 mb-2">2,847</h3>
-              <p className="text-gray-700 font-semibold mb-2">Rides Shared</p>
-              <p className="text-green-600 font-bold text-sm">
-                +12% this month
-              </p>
-            </div>
-            <div className="bg-white bg-opacity-95 rounded-3xl p-8 text-center shadow-xl hover:shadow-2xl transition-all transform hover:scale-105">
-              <div className="text-4xl mb-3">🌱</div>
-              <h3 className="text-2xl font-bold text-gray-800 mb-2">
-                18.5 tons
-              </h3>
-              <p className="text-gray-700 font-semibold mb-2">CO₂ Saved</p>
-              <p className="text-green-600 font-bold text-sm">
-                Environmental impact
-              </p>
-            </div>
-            <div className="bg-white bg-opacity-95 rounded-3xl p-8 text-center shadow-xl hover:shadow-2xl transition-all transform hover:scale-105">
-              <div className="text-4xl mb-3">💰</div>
-              <h3 className="text-2xl font-bold text-gray-800 mb-2">$42,150</h3>
-              <p className="text-gray-700 font-semibold mb-2">
-                Community Savings
-              </p>
-              <p className="text-green-600 font-bold text-sm">
-                Total saved by riders
-              </p>
-            </div>
-            <div className="bg-white bg-opacity-95 rounded-3xl p-8 text-center shadow-xl hover:shadow-2xl transition-all transform hover:scale-105">
-              <div className="text-4xl mb-3">🚗</div>
-              <h3 className="text-2xl font-bold text-gray-800 mb-2">1,240</h3>
-              <p className="text-gray-700 font-semibold mb-2">Cars Off Road</p>
-              <p className="text-green-600 font-bold text-sm">
-                Reduced congestion
-              </p>
-            </div>
+            {[
+              { icon: "🚗", stat: "2,847", label: "Rides Shared" },
+              { icon: "🌱", stat: "18.5 tons", label: "CO₂ Saved" },
+              { icon: "💰", stat: "$42,150", label: "Community Savings" },
+              { icon: "🚙", stat: "1,240", label: "Cars Off Road" },
+            ].map((item, i) => (
+              <div key={i} className={cardBase}>
+                <div className="text-4xl mb-3">{item.icon}</div>
+                <h3 className="text-2xl font-bold text-[#22477a] mb-2">
+                  {item.stat}
+                </h3>
+                <p className="font-semibold">{item.label}</p>
+              </div>
+            ))}
           </div>
         </div>
 
         {/* Values Section */}
-        <div className="mb-12">
-          <h2 className="text-4xl font-bold text-white mb-8 text-center">
+        <div className={sectionLight}>
+          <h2 className="text-4xl font-bold text-[#22477a] mb-8 text-center">
             Our Core Values
           </h2>
           <div className="grid md:grid-cols-2 gap-8">
-            <div className="bg-white bg-opacity-95 rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all">
-              <Users className="w-12 h-12 text-blue-600 mb-4" />
-              <h3 className="text-2xl font-bold text-gray-800 mb-3">
-                Community First
-              </h3>
-              <p className="text-gray-700">
-                We prioritize the needs of households living at or below the
-                poverty line, removing barriers to employment, education, and
-                healthcare access through affordable transportation.
-              </p>
-            </div>
-            <div className="bg-white bg-opacity-95 rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all">
-              <Leaf className="w-12 h-12 text-green-600 mb-4" />
-              <h3 className="text-2xl font-bold text-gray-800 mb-3">
-                Sustainability
-              </h3>
-              <p className="text-gray-700">
-                Every shared ride reduces congestion and carbon emissions. By
-                keeping cars off the road, we're building a cleaner Nova Scotia
-                for future generations.
-              </p>
-            </div>
-            <div className="bg-white bg-opacity-95 rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all">
-              <Shield className="w-12 h-12 text-indigo-600 mb-4" />
-              <h3 className="text-2xl font-bold text-gray-800 mb-3">
-                Safety & Trust
-              </h3>
-              <p className="text-gray-700">
-                QR-based pairing verification, safety pings, and
-                female-identifying pairing options ensure every journey is
-                secure. Privacy by design—no personal data collection.
-              </p>
-            </div>
-            <div className="bg-white bg-opacity-95 rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all">
-              <Award className="w-12 h-12 text-purple-600 mb-4" />
-              <h3 className="text-2xl font-bold text-gray-800 mb-3">
-                Local Rewards
-              </h3>
-              <p className="text-gray-700">
-                Our incentive system connects riders and drivers with local
-                vendors—fuel points, grocery discounts, and community engagement
-                that strengthens neighborhoods.
-              </p>
-            </div>
+            {[
+              {
+                icon: <Users className="w-12 h-12 text-[#22477a] mb-4" />,
+                title: "Community First",
+                text: "We prioritize the needs of low-income households, removing barriers to employment, education, and healthcare access through affordable transportation.",
+              },
+              {
+                icon: <Leaf className="w-12 h-12 text-[#f0a824] mb-4" />,
+                title: "Sustainability",
+                text: "Every shared ride reduces congestion and emissions. We're building a cleaner Nova Scotia for future generations.",
+              },
+              {
+                icon: <Shield className="w-12 h-12 text-[#22477a] mb-4" />,
+                title: "Safety & Trust",
+                text: "QR verification, safety pings, and privacy-first pairing options ensure secure and comfortable journeys.",
+              },
+              {
+                icon: <Award className="w-12 h-12 text-[#f0a824] mb-4" />,
+                title: "Local Rewards",
+                text: "Our incentive system connects riders and drivers with local vendors for fuel and grocery discounts.",
+              },
+            ].map((v, i) => (
+              <div key={i} className={valueCard}>
+                {v.icon}
+                <h3 className="text-2xl font-bold text-[#22477a] mb-3">
+                  {v.title}
+                </h3>
+                <p>{v.text}</p>
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* How It Works Section */}
-        <div className="bg-white bg-opacity-95 rounded-3xl p-12 shadow-2xl mb-12">
-          <h2 className="text-4xl font-bold text-gray-800 mb-8 text-center">
+        {/* How It Works */}
+        <div className={sectionDark}>
+          <h2 className="text-4xl font-bold text-[#f0a824] mb-8 text-center">
             How NS Move Works
           </h2>
 
-          {/* Rider Section */}
-          <div className="mb-10">
+          {/* Riders */}
+          <div className="mb-12">
             <div className="flex items-center mb-6">
-              <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-2xl mr-4">
+              <div className="w-12 h-12 bg-[#f0a824] rounded-full flex items-center justify-center text-2xl mr-4">
                 👤
               </div>
-              <h3 className="text-3xl font-bold text-gray-800">For Riders</h3>
+              <h3 className="text-3xl font-bold text-[#f0ebe1]">For Riders</h3>
             </div>
-            <div className="bg-blue-50 rounded-2xl p-8 border-2 border-blue-200">
+            <div className="bg-[#b8ccde] rounded-2xl p-8 border-2 border-[#f0a824]/40 text-[#000000]">
               <div className="grid md:grid-cols-2 gap-6 mb-6">
                 <div>
-                  <h4 className="text-xl font-bold text-gray-800 mb-3">
+                  <h4 className="text-xl font-bold text-[#22477a] mb-3">
                     How It Works
                   </h4>
-                  <ol className="text-gray-700 space-y-3">
-                    <li className="flex items-start">
-                      <span className="bg-blue-600 text-white rounded-full w-7 h-7 flex items-center justify-center mr-3 flex-shrink-0 text-sm font-bold">
-                        1
-                      </span>
-                      <span>
-                        Open app and select your transit hub (e.g., Bridge
-                        Terminal)
-                      </span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="bg-blue-600 text-white rounded-full w-7 h-7 flex items-center justify-center mr-3 flex-shrink-0 text-sm font-bold">
-                        2
-                      </span>
-                      <span>Browse nearby drivers heading to the same hub</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="bg-blue-600 text-white rounded-full w-7 h-7 flex items-center justify-center mr-3 flex-shrink-0 text-sm font-bold">
-                        3
-                      </span>
-                      <span>
-                        Select a driver and pair via QR code verification
-                      </span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="bg-blue-600 text-white rounded-full w-7 h-7 flex items-center justify-center mr-3 flex-shrink-0 text-sm font-bold">
-                        4
-                      </span>
-                      <span>
-                        Optionally request a grocery stop along the way
-                      </span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="bg-blue-600 text-white rounded-full w-7 h-7 flex items-center justify-center mr-3 flex-shrink-0 text-sm font-bold">
-                        5
-                      </span>
-                      <span>Complete your journey safely and securely</span>
-                    </li>
+                  <ol className="space-y-3">
+                    {[
+                      "Open app and select your transit hub",
+                      "Browse nearby drivers heading to the same hub",
+                      "Select a driver and pair via QR verification",
+                      "Optionally request a grocery stop",
+                      "Complete your journey safely",
+                    ].map((step, i) => (
+                      <li key={i} className="flex items-start">
+                        <span className="text-white bg-[#22477a] rounded-full w-7 h-7 flex items-center justify-center mr-3 text-sm font-bold">
+                          {i + 1}
+                        </span>
+                        <span>{step}</span>
+                      </li>
+                    ))}
                   </ol>
                 </div>
                 <div>
-                  <h4 className="text-xl font-bold text-gray-800 mb-3">
+                  <h4 className="text-xl font-bold text-[#22477a] mb-3">
                     What You Receive
                   </h4>
                   <div className="space-y-4">
-                    <div className="bg-white rounded-lg p-4 border-l-4 border-green-500">
-                      <p className="font-semibold text-gray-800 mb-1">
-                        💰 Grocery Token
-                      </p>
-                      <p className="text-sm text-gray-600">
-                        Earn discounts at partner grocery vendors with every
-                        completed trip
-                      </p>
-                    </div>
-                    <div className="bg-white rounded-lg p-4 border-l-4 border-blue-500">
-                      <p className="font-semibold text-gray-800 mb-1">
-                        🛡️ Safe Journey
-                      </p>
-                      <p className="text-sm text-gray-600">
-                        Safety pings alert you if route deviates, with direct
-                        admin support
-                      </p>
-                    </div>
-                    <div className="bg-white rounded-lg p-4 border-l-4 border-purple-500">
-                      <p className="font-semibold text-gray-800 mb-1">
-                        💵 Cost Savings
-                      </p>
-                      <p className="text-sm text-gray-600">
-                        Affordable rides with no surge pricing—designed for
-                        those on tight budgets
-                      </p>
-                    </div>
-                    <div className="bg-white rounded-lg p-4 border-l-4 border-indigo-500">
-                      <p className="font-semibold text-gray-800 mb-1">
-                        👩‍🤝‍👩 Choice & Privacy
-                      </p>
-                      <p className="text-sm text-gray-600">
-                        Option for female-identifying riders to match with
-                        female drivers
-                      </p>
-                    </div>
+                    {[
+                      {
+                        color: "#22477a",
+                        label: "💰 Grocery Token",
+                        desc: "Earn discounts at partner grocery vendors with every trip.",
+                      },
+                      {
+                        color: "#22477a",
+                        label: "🛡️ Safe Journey",
+                        desc: "Safety pings and admin alerts for route deviations.",
+                      },
+                      {
+                        color: "#22477a",
+                        label: "💵 Cost Savings",
+                        desc: "Affordable rides with no surge pricing.",
+                      },
+                      {
+                        color: "#22477a",
+                        label: "👩‍🤝‍👩 Choice & Privacy",
+                        desc: "Option for female-identifying riders to match with female drivers.",
+                      },
+                    ].map((b, i) => (
+                      <div
+                        key={i}
+                        className={borderBox}
+                        style={{ borderLeftColor: b.color }}
+                      >
+                        <p className="font-semibold mb-1">{b.label}</p>
+                        <p className="text-sm opacity-90">{b.desc}</p>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Driver Section */}
+          {/* Drivers */}
           <div>
             <div className="flex items-center mb-6">
-              <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center text-2xl mr-4">
+              <div className="w-12 h-12 bg-[#f0a824] rounded-full flex items-center justify-center text-2xl mr-4">
                 🚗
               </div>
-              <h3 className="text-3xl font-bold text-gray-800">For Drivers</h3>
+              <h3 className="text-3xl font-bold text-[#f0ebe1]">For Drivers</h3>
             </div>
-            <div className="bg-green-50 rounded-2xl p-8 border-2 border-green-200">
+            <div className="bg-[#b8ccde] rounded-2xl p-8 border-2 border-[#f0a824]/40 text-[#000000]">
               <div className="grid md:grid-cols-2 gap-6 mb-6">
                 <div>
-                  <h4 className="text-xl font-bold text-gray-800 mb-3">
+                  <h4 className="text-xl font-bold text-[#22477a] mb-3">
                     How It Works
                   </h4>
-                  <ol className="text-gray-700 space-y-3">
-                    <li className="flex items-start">
-                      <span className="bg-green-600 text-white rounded-full w-7 h-7 flex items-center justify-center mr-3 flex-shrink-0 text-sm font-bold">
-                        1
-                      </span>
-                      <span>
-                        Go online and set your hub destination and availability
-                        window
-                      </span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="bg-green-600 text-white rounded-full w-7 h-7 flex items-center justify-center mr-3 flex-shrink-0 text-sm font-bold">
-                        2
-                      </span>
-                      <span>See nearby rider requests heading to your hub</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="bg-green-600 text-white rounded-full w-7 h-7 flex items-center justify-center mr-3 flex-shrink-0 text-sm font-bold">
-                        3
-                      </span>
-                      <span>
-                        Accept requests and display your QR code for
-                        verification
-                      </span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="bg-green-600 text-white rounded-full w-7 h-7 flex items-center justify-center mr-3 flex-shrink-0 text-sm font-bold">
-                        4
-                      </span>
-                      <span>Give riders a safe ride to their destination</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="bg-green-600 text-white rounded-full w-7 h-7 flex items-center justify-center mr-3 flex-shrink-0 text-sm font-bold">
-                        5
-                      </span>
-                      <span>Complete the trip and collect your rewards</span>
-                    </li>
+                  <ol className="space-y-3">
+                    {[
+                      "Set your hub destination and availability",
+                      "See nearby rider requests",
+                      "Accept requests and display QR code",
+                      "Provide safe rides to destinations",
+                      "Complete trip and earn rewards",
+                    ].map((step, i) => (
+                      <li key={i} className="flex items-start">
+                        <span className="text-white bg-[#f0a824] rounded-full w-7 h-7 flex items-center justify-center mr-3 text-sm font-bold">
+                          {i + 1}
+                        </span>
+                        <span>{step}</span>
+                      </li>
+                    ))}
                   </ol>
                 </div>
                 <div>
-                  <h4 className="text-xl font-bold text-gray-800 mb-3">
+                  <h4 className="text-xl font-bold text-[#22477a] mb-3">
                     What You Receive
                   </h4>
                   <div className="space-y-4">
-                    <div className="bg-white rounded-lg p-4 border-l-4 border-orange-500">
-                      <p className="font-semibold text-gray-800 mb-1">
-                        ⛽ Fuel Token
-                      </p>
-                      <p className="text-sm text-gray-600">
-                        Earn fuel discounts at partner gas stations for every
-                        completed ride
-                      </p>
-                    </div>
-                    <div className="bg-white rounded-lg p-4 border-l-4 border-green-500">
-                      <p className="font-semibold text-gray-800 mb-1">
-                        💚 Give Back
-                      </p>
-                      <p className="text-sm text-gray-600">
-                        Help community members reach employment, education, and
-                        healthcare
-                      </p>
-                    </div>
-                    <div className="bg-white rounded-lg p-4 border-l-4 border-blue-500">
-                      <p className="font-semibold text-gray-800 mb-1">
-                        🌍 Reduce Emissions
-                      </p>
-                      <p className="text-sm text-gray-600">
-                        Earn environmental credits while reducing your carbon
-                        footprint
-                      </p>
-                    </div>
-                    <div className="bg-white rounded-lg p-4 border-l-4 border-purple-500">
-                      <p className="font-semibold text-gray-800 mb-1">
-                        🤝 Build Community
-                      </p>
-                      <p className="text-sm text-gray-600">
-                        Connect with neighbors and strengthen local connections
-                      </p>
-                    </div>
+                    {[
+                      {
+                        color: "#f0a824",
+                        label: "⛽ Fuel Token",
+                        desc: "Earn fuel discounts at partner gas stations.",
+                      },
+                      {
+                        color: "#f0a824",
+                        label: "💚 Give Back",
+                        desc: "Help community members access essential services.",
+                      },
+                      {
+                        color: "#f0a824",
+                        label: "🌍 Reduce Emissions",
+                        desc: "Lower your carbon footprint and earn credits.",
+                      },
+                      {
+                        color: "#f0a824",
+                        label: "🤝 Build Community",
+                        desc: "Connect with neighbors and strengthen local ties.",
+                      },
+                    ].map((b, i) => (
+                      <div
+                        key={i}
+                        className={borderBox}
+                        style={{ borderLeftColor: b.color }}
+                      >
+                        <p className="font-semibold mb-1">{b.label}</p>
+                        <p className="text-sm opacity-90">{b.desc}</p>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -350,67 +272,62 @@ export default function AboutPage() {
           </div>
         </div>
 
-        {/* Safety Features Section */}
-        <div className="bg-white bg-opacity-95 rounded-3xl p-12 shadow-2xl mb-12">
-          <h2 className="text-4xl font-bold text-gray-800 mb-8 text-center">
+        {/* Safety Section */}
+        <div className={sectionLight}>
+          <h2 className="text-4xl font-bold text-[#22477a] mb-8 text-center">
             Safety & Privacy First
           </h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="text-4xl mb-4">🔐</div>
-              <h3 className="text-xl font-bold text-gray-800 mb-3">
-                QR Verification
-              </h3>
-              <p className="text-gray-700">
-                Physical QR code confirmation ensures authentic pairing between
-                riders and drivers.
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl mb-4">👩‍🤝‍👩</div>
-              <h3 className="text-xl font-bold text-gray-800 mb-3">
-                Female-Only Pairing
-              </h3>
-              <p className="text-gray-700">
-                Female-identifying riders can opt for female drivers for added
-                comfort and security.
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl mb-4">🛡️</div>
-              <h3 className="text-xl font-bold text-gray-800 mb-3">
-                No Personal Data
-              </h3>
-              <p className="text-gray-700">
-                Aliases only—no real IDs or personal information collected.
-                Privacy by design.
-              </p>
-            </div>
+          <div className="grid md:grid-cols-3 gap-8 text-center">
+            {[
+              {
+                icon: "🔐",
+                title: "QR Verification",
+                text: "Ensures authentic pairing between riders and drivers.",
+              },
+              {
+                icon: "👩‍🤝‍👩",
+                title: "Female-Only Pairing",
+                text: "Added comfort and security for female-identifying riders.",
+              },
+              {
+                icon: "🛡️",
+                title: "No Personal Data",
+                text: "Aliases only—no real IDs or personal info collected.",
+              },
+            ].map((item, i) => (
+              <div key={i}>
+                <div className="text-4xl mb-4">{item.icon}</div>
+                <h3 className="text-xl font-bold text-[#22477a] mb-3">
+                  {item.title}
+                </h3>
+                <p>{item.text}</p>
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* CTA Section */}
-        <div className="bg-white bg-opacity-95 rounded-3xl p-12 text-center shadow-2xl">
-          <h2 className="text-4xl font-bold text-gray-800 mb-4">
-            Ready to Join NS Move?
-          </h2>
-          <p className="text-lg text-gray-700 mb-8">
+        {/* CTA */}
+        <div className="bg-[#22477a] rounded-3xl p-12 text-center shadow-xl text-[#f0ebe1]">
+          <h2 className="text-4xl font-bold mb-4">Ready to Join NS Move?</h2>
+          <p className="text-lg mb-8 opacity-90">
             Be part of the ridesharing revolution in Nova Scotia.
           </p>
-          <button className="inline-block bg-gradient-to-r from-indigo-600 to-blue-600 text-white px-10 py-4 rounded-xl font-semibold text-lg hover:shadow-xl transition-all hover:from-indigo-700 hover:to-blue-700">
-             <Link
-              to="/auth"
-              onClick={() => window.scrollTo(0, 0)}
-              className="text-white no-underline hover:text-indigo-100 transition-colors"
-            >Get Started Today →</Link>
-          </button>
+          <Link
+            to="/auth"
+            onClick={() => window.scrollTo(0, 0)}
+            className="inline-block bg-[#f0a824] text-[#000000] px-10 py-4 rounded-xl font-semibold text-lg hover:bg-[#b8ccde] transition-all"
+          >
+            Get Started Today →
+          </Link>
         </div>
       </div>
-       <QRCodePopup></QRCodePopup>    
+
+      <QRCodePopup />
+
       {/* Footer */}
-      <div className="text-center py-8 text-indigo-100 border-t border-white border-opacity-20 mt-12">
-        <p>© 2025 NS Move. Building a sustainable future together..</p>
+      <div className="text-center py-8 bg-[#22477a] text-[#f0ebe1] mt-12">
+        <p>© 2025 NS Move. Building a sustainable future together.</p>
       </div>
-      </div>
+    </div>
   );
 }

@@ -73,22 +73,22 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-600 via-purple-600 to-blue-700">
+    <div className="min-h-screen bg-[#22477a]">
       <Navbar />
 
       <div className="max-w-6xl mx-auto px-6 py-12">
         {/* Profile Header Card */}
-        <div className="bg-white bg-opacity-95 rounded-3xl p-12 shadow-2xl mb-8">
+        <div className="bg-[#f0ebe1] bg-opacity-95 rounded-3xl p-12 shadow-2xl mb-8">
           <div className="grid md:grid-cols-4 gap-8 items-start mb-8">
             {/* Profile Image & Name */}
             <div className="md:col-span-1 text-center">
-              <div className="w-40 h-40 bg-gradient-to-br from-indigo-400 to-blue-500 rounded-full flex items-center justify-center text-7xl mx-auto mb-6 shadow-lg">
+              <div className="w-40 h-40 bg-[#f0a824] rounded-full flex items-center justify-center text-7xl mx-auto mb-6 shadow-lg">
                 {profile.profileImage}
               </div>
               {!isEditing && (
                 <button
                   onClick={() => setIsEditing(true)}
-                  className="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition-all"
+                  className="inline-flex items-center gap-2 bg-[#22477a] text-[#f0ebe1] px-4 py-2 rounded-lg font-semibold hover:bg-[#f0a824] transition-all"
                 >
                   <Edit2 className="w-4 h-4" />
                   Edit Profile
@@ -139,14 +139,14 @@ export default function ProfilePage() {
                   <div className="flex gap-3">
                     <button
                       onClick={handleSave}
-                      className="flex items-center gap-2 bg-green-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-green-700 transition-all"
+                      className="flex items-center gap-2 bg-green-600 text-[#f0ebe1] px-6 py-2 rounded-lg font-semibold hover:bg-green-700 transition-all"
                     >
                       <Save className="w-4 h-4" />
                       Save
                     </button>
                     <button
                       onClick={handleCancel}
-                      className="flex items-center gap-2 bg-gray-400 text-white px-6 py-2 rounded-lg font-semibold hover:bg-gray-500 transition-all"
+                      className="flex items-center gap-2 bg-gray-400 text-[#f0ebe1] px-6 py-2 rounded-lg font-semibold hover:bg-gray-500 transition-all"
                     >
                       <X className="w-4 h-4" />
                       Cancel
@@ -159,7 +159,7 @@ export default function ProfilePage() {
                     {profile.name}
                   </h1>
                   <div className="flex items-center gap-3 mb-4">
-                    <span className="inline-block bg-blue-600 text-white px-4 py-1 rounded-full text-sm font-semibold">
+                    <span className="inline-block bg-[#22477a] text-[#f0ebe1] px-4 py-1 rounded-full text-sm font-semibold">
                       {profile.role}
                     </span>
                     <span className="text-gray-600">{profile.joinDate}</span>
@@ -167,15 +167,15 @@ export default function ProfilePage() {
                   <p className="text-gray-700 text-lg mb-4">{profile.bio}</p>
                   <div className="space-y-2 text-gray-600">
                     <div className="flex items-center gap-3">
-                      <MapPin className="w-5 h-5 text-indigo-600" />
+                      <MapPin className="w-5 h-5 text-[#22477a]" />
                       <span>{profile.location}</span>
                     </div>
                     <div className="flex items-center gap-3">
-                      <Mail className="w-5 h-5 text-indigo-600" />
+                      <Mail className="w-5 h-5 text-[#22477a]" />
                       <span>{profile.email}</span>
                     </div>
                     <div className="flex items-center gap-3">
-                      <Phone className="w-5 h-5 text-indigo-600" />
+                      <Phone className="w-5 h-5 text-[#22477a]" />
                       <span>{profile.phone}</span>
                     </div>
                   </div>
@@ -200,7 +200,7 @@ export default function ProfilePage() {
 
         {/* Stats Section */}
         <div className="grid md:grid-cols-5 gap-6 mb-8">
-          <div className="bg-white bg-opacity-95 rounded-3xl p-8 text-center shadow-xl hover:shadow-2xl transition-all">
+          <div className="bg-[#f0ebe1] bg-opacity-95 rounded-3xl p-8 text-center shadow-xl hover:shadow-2xl transition-all">
             <TrendingUp className="w-12 h-12 text-blue-600 mx-auto mb-3" />
             <h3 className="text-3xl font-bold text-gray-800 mb-2">
               {riderStats.ridesCompleted}
@@ -208,7 +208,7 @@ export default function ProfilePage() {
             <p className="text-gray-600">Rides Completed</p>
           </div>
 
-          <div className="bg-white bg-opacity-95 rounded-3xl p-8 text-center shadow-xl hover:shadow-2xl transition-all">
+          <div className="bg-[#f0ebe1] bg-opacity-95 rounded-3xl p-8 text-center shadow-xl hover:shadow-2xl transition-all">
             <Award className="w-12 h-12 text-green-600 mx-auto mb-3" />
             <h3 className="text-3xl font-bold text-gray-800 mb-2">
               {riderStats.coSaved}
@@ -216,7 +216,7 @@ export default function ProfilePage() {
             <p className="text-gray-600">CO₂ Saved</p>
           </div>
 
-          <div className="bg-white bg-opacity-95 rounded-3xl p-8 text-center shadow-xl hover:shadow-2xl transition-all">
+          <div className="bg-[#f0ebe1] bg-opacity-95 rounded-3xl p-8 text-center shadow-xl hover:shadow-2xl transition-all">
             <div className="text-4xl mx-auto mb-3">💰</div>
             <h3 className="text-3xl font-bold text-gray-800 mb-2">
               {riderStats.moneySpent}
@@ -224,7 +224,7 @@ export default function ProfilePage() {
             <p className="text-gray-600">Total Spent</p>
           </div>
 
-          <div className="bg-white bg-opacity-95 rounded-3xl p-8 text-center shadow-xl hover:shadow-2xl transition-all">
+          <div className="bg-[#f0ebe1] bg-opacity-95 rounded-3xl p-8 text-center shadow-xl hover:shadow-2xl transition-all">
             <Star className="w-12 h-12 text-yellow-500 mx-auto mb-3" />
             <h3 className="text-3xl font-bold text-gray-800 mb-2">
               {riderStats.averageRating}
@@ -232,7 +232,7 @@ export default function ProfilePage() {
             <p className="text-gray-600">Rating</p>
           </div>
 
-          <div className="bg-white bg-opacity-95 rounded-3xl p-8 text-center shadow-xl hover:shadow-2xl transition-all">
+          <div className="bg-[#f0ebe1] bg-opacity-95 rounded-3xl p-8 text-center shadow-xl hover:shadow-2xl transition-all">
             <div className="text-4xl mx-auto mb-3">⭐</div>
             <h3 className="text-3xl font-bold text-gray-800 mb-2">
               {riderStats.ratingCount}
@@ -242,7 +242,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Recent Activity */}
-        <div className="bg-white bg-opacity-95 rounded-3xl p-8 shadow-2xl mb-8">
+        <div className="bg-[#f0ebe1] bg-opacity-95 rounded-3xl p-8 shadow-2xl mb-8">
           <h2 className="text-2xl font-bold text-gray-800 mb-6">
             Recent Rides
           </h2>
@@ -269,7 +269,7 @@ export default function ProfilePage() {
             ].map((ride, idx) => (
               <div
                 key={idx}
-                className="flex justify-between items-center p-4 bg-gray-50 rounded-lg border-l-4 border-indigo-600"
+                className="flex justify-between items-center p-4 bg-gray-50 rounded-lg border-l-4 border-[#f0a824]"
               >
                 <div>
                   <p className="font-semibold text-gray-800">
@@ -287,7 +287,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Rewards Timeline */}
-        <div className="bg-white bg-opacity-95 rounded-3xl p-8 shadow-2xl mb-8">
+        <div className="bg-[#f0ebe1] bg-opacity-95 rounded-3xl p-8 shadow-2xl mb-8">
           <h2 className="text-2xl font-bold text-gray-800 mb-2">
             Rewards Journey
           </h2>
@@ -307,7 +307,7 @@ export default function ProfilePage() {
             </div>
             <div className="relative h-4 bg-gray-200 rounded-full overflow-hidden">
               <div
-                className="absolute h-full bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full transition-all duration-500"
+                className="absolute h-full bg-[#f0a824] rounded-full transition-all duration-500"
                 style={{ width: `${(currentKm / 100) * 100}%` }}
               />
             </div>
@@ -316,14 +316,14 @@ export default function ProfilePage() {
           {/* Milestone Timeline */}
           <div className="relative">
             {/* Vertical line */}
-            <div className="absolute left-8 top-0 bottom-0 w-1 bg-gradient-to-b from-indigo-600 via-purple-500 to-gray-300" />
+            <div className="absolute left-8 top-0 bottom-0 w-1 bg-[#f0a824]" />
 
             <div className="space-y-6">
               {rewardMilestones.map((milestone, idx) => (
                 <div key={idx} className="relative flex items-start gap-6">
                   {/* Milestone marker */}
                   <div
-                    className={`relative z-10 w-16 h-16 rounded-full flex items-center justify-center font-bold text-white shadow-lg ${
+                    className={`relative z-10 w-16 h-16 rounded-full flex items-center justify-center font-bold text-[#f0ebe1] shadow-lg ${
                       milestone.unlocked
                         ? "bg-gradient-to-br from-green-500 to-green-600"
                         : currentKm >= milestone.km * 0.8
@@ -358,19 +358,19 @@ export default function ProfilePage() {
                         </p>
                       </div>
                       {milestone.unlocked && (
-                        <span className="bg-green-600 text-white px-4 py-1 rounded-full text-sm font-semibold">
+                        <span className="bg-green-600 text-[#f0ebe1] px-4 py-1 rounded-full text-sm font-semibold">
                           Unlocked ✓
                         </span>
                       )}
                       {!milestone.unlocked &&
                         currentKm >= milestone.km * 0.8 && (
-                          <span className="bg-orange-500 text-white px-4 py-1 rounded-full text-sm font-semibold">
+                          <span className="bg-orange-500 text-[#f0ebe1] px-4 py-1 rounded-full text-sm font-semibold">
                             Almost There!
                           </span>
                         )}
                       {!milestone.unlocked &&
                         currentKm < milestone.km * 0.8 && (
-                          <span className="bg-gray-400 text-white px-4 py-1 rounded-full text-sm font-semibold">
+                          <span className="bg-gray-400 text-[#f0ebe1] px-4 py-1 rounded-full text-sm font-semibold">
                             Locked
                           </span>
                         )}
@@ -408,7 +408,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Settings & Security */}
-        <div className="bg-white bg-opacity-95 rounded-3xl p-8 shadow-2xl mb-8">
+        <div className="bg-[#f0ebe1] bg-opacity-95 rounded-3xl p-8 shadow-2xl mb-8">
           <h2 className="text-2xl font-bold text-gray-800 mb-8">
             Account Management
           </h2>
@@ -417,7 +417,7 @@ export default function ProfilePage() {
             {/* Account Settings Column */}
             <div>
               <h3 className="text-lg font-semibold text-gray-700 mb-4 flex items-center gap-2">
-                <Shield className="w-5 h-5 text-indigo-600" />
+                <Shield className="w-5 h-5 text-[#22477a]" />
                 Security & Privacy
               </h3>
               <div className="space-y-3">
@@ -474,7 +474,7 @@ export default function ProfilePage() {
             {/* Preferences Column */}
             <div>
               <h3 className="text-lg font-semibold text-gray-700 mb-4 flex items-center gap-2">
-                <Star className="w-5 h-5 text-indigo-600" />
+                <Star className="w-5 h-5 text-[#22477a]" />
                 Preferences
               </h3>
               <div className="space-y-3">
@@ -566,7 +566,7 @@ export default function ProfilePage() {
       <QRCodePopup />
 
       {/* Footer */}
-      <div className="text-center py-8 text-indigo-100 border-t border-white border-opacity-20 mt-12">
+      <div className="text-center py-8 text-indigo-100 border-t border-[#f0ebe1] border-opacity-20 mt-12">
         <p>© 2025 NSMove. Building a sustainable future together.</p>
       </div>
     </div>

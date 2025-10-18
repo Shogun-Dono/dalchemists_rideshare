@@ -511,20 +511,20 @@ function AdminDashboard() {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-gray-50 p-6">
+      <div className="min-h-screen bg-[#22477a] p-6">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="mb-6">
-            <h1 className="text-4xl font-bold text-gray-800 mb-2">
+            <h1 className="text-4xl font-bold text-[#f0ebe1] mb-2">
               Admin Dashboard
             </h1>
-            <p className="text-gray-600">
+            <p className="text-[#f0ebe1]">
               Halifax Regional Municipality - Rideshare Analytics
             </p>
           </div>
 
           {/* Search and Filters */}
-          <div className="bg-white rounded-xl shadow-md p-6 mb-6">
+          <div className="bg-[#f0ebe1] rounded-xl shadow-md p-6 mb-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -535,7 +535,7 @@ function AdminDashboard() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search by area name..."
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#f0a824] focus:border-transparent outline-none"
                 />
               </div>
               <div>
@@ -545,7 +545,7 @@ function AdminDashboard() {
                 <select
                   value={selectedFilter}
                   onChange={(e) => setSelectedFilter(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#f0a824] focus:border-transparent outline-none"
                 >
                   <option value="all">All Areas</option>
                   <option value="high">High Activity (300+)</option>
@@ -560,7 +560,7 @@ function AdminDashboard() {
                 <select
                   value={timeRange}
                   onChange={(e) => setTimeRange(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#f0a824] focus:border-transparent outline-none"
                 >
                   <option value="day">Today</option>
                   <option value="week">This Week</option>
@@ -572,7 +572,7 @@ function AdminDashboard() {
           </div>
 
           {/* View Navigation Buttons */}
-          <div className="bg-white rounded-xl shadow-md p-4 mb-6">
+          <div className="bg-[#f0ebe1] rounded-xl shadow-md p-4 mb-6">
             <div className="flex flex-wrap gap-3">
               {["map", "bar", "pie", "line", "histogram"].map((view) => {
                 const labels: Record<ViewType, string> = {
@@ -588,8 +588,8 @@ function AdminDashboard() {
                     onClick={() => setActiveView(view as ViewType)}
                     className={`px-6 py-3 rounded-lg font-semibold transition-all ${
                       activeView === view
-                        ? "bg-purple-600 text-white shadow-lg"
-                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                        ? "bg-[#f0a824] text-[#f0ebe1] shadow-lg"
+                        : "bg-[#b8ccde] text-gray-700 hover:bg-gray-200"
                     }`}
                   >
                     {labels[view as ViewType]}
@@ -600,7 +600,7 @@ function AdminDashboard() {
           </div>
 
           {/* Central View */}
-          <div className="bg-white rounded-xl shadow-md p-6 mb-6">
+          <div className="bg-[#f0ebe1] rounded-xl shadow-md p-6 mb-6">
             {activeView === "map" && (
               <RidesHeatmapWithStraightLines
                 ridesFrom={filteredFrom}
@@ -622,24 +622,24 @@ function AdminDashboard() {
 
           {/* Summary Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-white rounded-xl shadow-md p-6">
+            <div className="bg-[#f0ebe1] rounded-xl shadow-md p-6">
               <p className="text-gray-600 text-sm mb-1">Total Rides</p>
               <p className="text-3xl font-bold text-purple-600">2,620</p>
               <p className="text-green-600 text-sm mt-1">
                 ↑ 12% from last week
               </p>
             </div>
-            <div className="bg-white rounded-xl shadow-md p-6">
+            <div className="bg-[#f0ebe1] rounded-xl shadow-md p-6">
               <p className="text-gray-600 text-sm mb-1">Active Areas</p>
               <p className="text-3xl font-bold text-blue-600">10</p>
               <p className="text-gray-500 text-sm mt-1">Across Halifax</p>
             </div>
-            <div className="bg-white rounded-xl shadow-md p-6">
+            <div className="bg-[#f0ebe1] rounded-xl shadow-md p-6">
               <p className="text-gray-600 text-sm mb-1">Avg. Distance</p>
               <p className="text-3xl font-bold text-green-600">8.5 km</p>
               <p className="text-gray-500 text-sm mt-1">Per ride</p>
             </div>
-            <div className="bg-white rounded-xl shadow-md p-6">
+            <div className="bg-[#f0ebe1] rounded-xl shadow-md p-6">
               <p className="text-gray-600 text-sm mb-1">Peak Hour</p>
               <p className="text-3xl font-bold text-orange-600">5 PM</p>
               <p className="text-gray-500 text-sm mt-1">Evening commute</p>

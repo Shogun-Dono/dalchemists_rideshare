@@ -162,11 +162,11 @@ export default function UserDashboard() {
   const RideCard = ({ ride }: { ride: Ride }) => (
     <div
       onClick={() => handleRideClick(ride.id)}
-      className="border border-gray-200 rounded-xl p-5 hover:shadow-md transition-shadow cursor-pointer bg-gradient-to-r from-white to-gray-50 hover:border-blue-300"
+      className="border border-gray-200 rounded-xl p-5 hover:shadow-md transition-shadow cursor-pointer bg-[#b8ccde] hover:border-blue-300"
     >
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+          <div className="w-12 h-12 bg-[#f0a824] rounded-full flex items-center justify-center text-[#f0ebe1] font-semibold text-sm">
             {ride.avatar}
           </div>
           <div>
@@ -242,7 +242,7 @@ export default function UserDashboard() {
         )}
       </div>
       <div className="mt-4 pt-4 border-t border-gray-200">
-        <button className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors">
+        <button className="w-full px-4 py-2 bg-[#22477a] text-[#f0ebe1] rounded-lg font-medium hover:bg-[#f0a824] transition-colors">
           View Details
         </button>
       </div>
@@ -252,20 +252,20 @@ export default function UserDashboard() {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
+      <div className="min-h-screen bg-[#22477a] p-6">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-4xl font-bold text-gray-800 mb-2">
+            <h1 className="text-4xl font-bold text-[#f0ebe1] mb-2">
               Community Rideshare
             </h1>
-            <p className="text-gray-600">
+            <p className="text-[#b8ccde]">
               Share your journey, reduce costs, protect the environment
             </p>
           </div>
 
           {/* Search Section */}
-          <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
+          <div className="bg-[#f0ebe1] rounded-2xl shadow-lg p-8 mb-8">
             <h2 className="text-2xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
               <span className="text-2xl">📍</span>
               Find a Ride
@@ -298,7 +298,7 @@ export default function UserDashboard() {
               <div className="flex items-end">
                 <button
                   onClick={handleSearch}
-                  className="w-full md:w-auto px-8 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg"
+                  className="w-full md:w-auto px-8 py-3 bg-[#22477a] text-[#f0ebe1] rounded-lg font-semibold hover:bg-[#f0a824] transition-colors shadow-md hover:shadow-lg"
                 >
                   Search Rides
                 </button>
@@ -308,7 +308,7 @@ export default function UserDashboard() {
 
           {/* Recurring Rides */}
           {recurringRides.length > 0 && (
-            <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
+            <div className="bg-[#f0ebe1] rounded-2xl shadow-lg p-8 mb-8">
               <h2 className="text-2xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
                 <span className="text-2xl">🔄</span>
                 Daily Commutes ({recurringRides.length})
@@ -324,7 +324,7 @@ export default function UserDashboard() {
 
           {/* One-Time Rides */}
           {oneTimeRides.length > 0 && (
-            <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
+            <div className="bg-[#f0ebe1] rounded-2xl shadow-lg p-8 mb-8">
               <h2 className="text-2xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
                 <span className="text-2xl">✓</span>
                 One-Time Rides ({oneTimeRides.length})
@@ -339,14 +339,14 @@ export default function UserDashboard() {
           )}
 
           {rides.length === 0 && (
-            <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
+            <div className="bg-[#f0ebe1] rounded-2xl shadow-lg p-8 text-center">
               <p className="text-lg text-gray-500 mb-2">No rides available</p>
               <p className="text-sm text-gray-600">Check back soon for new rides!</p>
             </div>
           )}
 
           {/* Stats Section */}
-          <div className="bg-white rounded-2xl shadow-lg p-8 mt-8">
+          <div className="bg-[#f0ebe1] rounded-2xl shadow-lg p-8 mt-8">
             <h2 className="text-2xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
               <span className="text-2xl">📈</span>
               Community Impact
@@ -355,10 +355,10 @@ export default function UserDashboard() {
               {stats.map((stat, idx) => (
                 <div
                   key={idx}
-                  className="relative overflow-hidden rounded-xl border border-gray-200 p-6 hover:shadow-lg transition-shadow"
+                  className="relative overflow-hidden rounded-xl border border-[#b8ccde] p-6 hover:shadow-lg transition-shadow"
                 >
                   <div
-                    className={`${stat.color} w-14 h-14 rounded-lg flex items-center justify-center text-white mb-4 text-2xl`}
+                    className={`${stat.color} w-14 h-14 rounded-lg flex items-center justify-center text-[#f0ebe1] mb-4 text-2xl`}
                   >
                     {stat.icon}
                   </div>

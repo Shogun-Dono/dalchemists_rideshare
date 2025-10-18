@@ -67,7 +67,7 @@ export default function RideDetails() {
         <Navbar />
         <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
           <div className="max-w-4xl mx-auto">
-            <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
+            <div className="bg-[#f0ebe1] rounded-2xl shadow-lg p-8 text-center">
               <h1 className="text-2xl font-bold text-gray-800 mb-4">
                 Ride Not Found
               </h1>
@@ -76,7 +76,7 @@ export default function RideDetails() {
               </p>
               <button
                 onClick={() => navigate("/user")}
-                className="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+                className="px-6 py-3 bg-blue-600 text-[#f0ebe1] rounded-lg font-semibold hover:bg-blue-700 transition-colors"
               >
                 Back to Dashboard
               </button>
@@ -101,12 +101,12 @@ export default function RideDetails() {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
+      <div className="min-h-screen bg-[#22477a] p-6">
         <div className="max-w-4xl mx-auto">
           {/* Back Button */}
           <button
             onClick={() => navigate("/user")}
-            className="mb-6 flex items-center gap-2 text-gray-600 hover:text-gray-800 font-medium transition-colors"
+            className="mb-6 flex items-center gap-2 text-[#f0ebe1] hover:text-gray-800 font-medium transition-colors"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -124,14 +124,14 @@ export default function RideDetails() {
           </button>
 
           {/* Ride Details Card */}
-          <div className="bg-white rounded-2xl shadow-lg p-8 mb-6">
+          <div className="bg-[#f0ebe1] rounded-2xl shadow-lg p-8 mb-6">
             <h1 className="text-3xl font-bold text-gray-800 mb-6">
               Ride Details
             </h1>
 
             {/* Driver Info */}
             <div className="flex items-center gap-4 pb-6 border-b border-gray-200 mb-6">
-              <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold text-2xl">
+              <div className="w-20 h-20 bg-[#f0a824] rounded-full flex items-center justify-center text-[#f0ebe1] font-bold text-2xl">
                 {ride.avatar}
               </div>
               <div className="flex-1">
@@ -189,7 +189,7 @@ export default function RideDetails() {
             )}
 
             {/* Ride Details Grid */}
-            <div className="grid md:grid-cols-2 gap-6 mb-8 pb-8 border-b border-gray-200">
+            <div className="grid md:grid-cols-2 gap-6 mb-8 pb-8 border-b border-[#b8ccde]">
               <div>
                 <p className="text-sm text-gray-500 mb-1">Date</p>
                 <p className="text-lg font-semibold text-gray-800">📅 {ride.date}</p>
@@ -243,7 +243,7 @@ export default function RideDetails() {
               </div>
 
               {/* Leaflet Map */}
-              <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-200">
+              <div className="bg-[#f0ebe1] rounded-2xl shadow-lg p-6 border border-gray-200">
                 <h3 className="text-lg font-semibold text-gray-800 mb-4">
                   Route Map
                 </h3>
@@ -281,7 +281,7 @@ export default function RideDetails() {
           </div>
 
           {/* Request Ride Section */}
-          <div className="bg-white rounded-2xl shadow-lg p-8">
+          <div className="bg-[#f0ebe1] rounded-2xl shadow-lg p-8">
             <h3 className="text-xl font-semibold text-gray-800 mb-6">
               Request This Ride
             </h3>
@@ -333,7 +333,7 @@ export default function RideDetails() {
                     className="sr-only peer"
                   />
                   <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-400 rounded-full peer peer-checked:bg-blue-600 relative transition">
-                    <span className="absolute top-0.5 left-0.5 bg-white w-5 h-5 rounded-full transition-transform peer-checked:translate-x-5"></span>
+                    <span className="absolute top-0.5 left-0.5 bg-[#f0ebe1] w-5 h-5 rounded-full transition-transform peer-checked:translate-x-5"></span>
                   </div>
                 </label>
               </div>
@@ -354,7 +354,7 @@ export default function RideDetails() {
 
               <button
                 onClick={handleRequestRide}
-                className="w-full px-6 py-4 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg text-lg"
+                className="w-full px-6 py-4 bg-[#22477a] text-[#f0ebe1] rounded-lg font-semibold hover:bg-[#f0a824] transition-colors shadow-md hover:shadow-lg text-lg"
               >
                 Send Ride Request
               </button>

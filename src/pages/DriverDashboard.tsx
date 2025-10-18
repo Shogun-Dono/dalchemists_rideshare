@@ -143,10 +143,10 @@ export default function DriverDashboard() {
   };
 
   const RideCard = ({ ride }: { ride: ExtendedRide }) => (
-    <div className="border border-gray-200 rounded-xl p-5 hover:shadow-md transition-shadow bg-gradient-to-r from-white to-indigo-50">
+    <div className="border border-gray-200 rounded-xl p-5 hover:shadow-md transition-shadow bg-[#b8ccde]">
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+          <div className="w-12 h-12 bg-[#f0a824] rounded-full flex items-center justify-center text-[#f0ebe1] font-semibold text-sm">
             {ride.avatar}
           </div>
           <div>
@@ -223,20 +223,20 @@ export default function DriverDashboard() {
   return (
     <>
       <Navbar></Navbar>
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-100 p-6">
+      <div className="min-h-screen bg-[#22477a] p-6">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-4xl font-bold text-gray-800 mb-2">
+            <h1 className="text-4xl font-bold text-[#f0ebe1] mb-2">
               Driver Dashboard
             </h1>
-            <p className="text-gray-600">
+            <p className="text-[#b8ccde]">
               Manage your rides and help your community
             </p>
           </div>
 
           {/* Driver Stats */}
-          <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
+          <div className="bg-[#f0ebe1] rounded-2xl shadow-lg p-8 mb-8">
             <h2 className="text-2xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
               <span className="text-2xl">📊</span>
               Your Stats
@@ -245,10 +245,10 @@ export default function DriverDashboard() {
               {driverStats.map((stat, idx) => (
                 <div
                   key={idx}
-                  className="relative overflow-hidden rounded-xl border border-gray-200 p-6 hover:shadow-lg transition-shadow"
+                  className="relative overflow-hidden rounded-xl border border-[#b8ccde] p-6 hover:shadow-lg transition-shadow"
                 >
                   <div
-                    className={`${stat.color} w-14 h-14 rounded-lg flex items-center justify-center text-white mb-4 text-2xl`}
+                    className={`${stat.color} w-14 h-14 rounded-lg flex items-center justify-center text-[#f0ebe1] mb-4 text-2xl`}
                   >
                     {stat.icon}
                   </div>
@@ -265,7 +265,7 @@ export default function DriverDashboard() {
           </div>
 
           {/* Post a Ride Section */}
-          <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
+          <div className="bg-[#f0ebe1] rounded-2xl shadow-lg p-8 mb-8">
             <h2 className="text-2xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
               <span className="text-2xl">🚗</span>
               Post a New Ride
@@ -310,7 +310,7 @@ export default function DriverDashboard() {
                   value={rideFrom}
                   onChange={(e) => setRideFrom(e.target.value)}
                   placeholder="Enter pickup location"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
+                  className="w-full px-4 py-3 border border-[#b8ccde] rounded-lg focus:ring-2 focus:ring-[#f0a824] focus:border-transparent outline-none transition"
                 />
               </div>
               <div>
@@ -322,7 +322,7 @@ export default function DriverDashboard() {
                   value={rideTo}
                   onChange={(e) => setRideTo(e.target.value)}
                   placeholder="Enter destination"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
+                  className="w-full px-4 py-3 border border-[#b8ccde] rounded-lg focus:ring-2 focus:ring-[#f0a824] focus:border-transparent outline-none transition"
                 />
               </div>
               <div>
@@ -333,7 +333,7 @@ export default function DriverDashboard() {
                   type="time"
                   value={rideTime}
                   onChange={(e) => setRideTime(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
+                  className="w-full px-4 py-3 border border-[#b8ccde] rounded-lg focus:ring-2 focus:ring-[#f0a824] focus:border-transparent outline-none transition"
                 />
               </div>
 
@@ -346,7 +346,7 @@ export default function DriverDashboard() {
                     type="date"
                     value={rideDate}
                     onChange={(e) => setRideDate(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
+                    className="w-full px-4 py-3 border border-[#b8ccde] rounded-lg focus:ring-2 focus:ring-[#f0a824] focus:border-transparent outline-none transition"
                   />
                 </div>
               )}
@@ -361,14 +361,14 @@ export default function DriverDashboard() {
                   max={8}
                   value={rideSeats}
                   onChange={(e) => setRideSeats(Number(e.target.value))}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
+                  className="w-full px-4 py-3 border border-[#b8ccde] rounded-lg focus:ring-2 focus:ring-[#f0a824] focus:border-transparent outline-none transition"
                 />
               </div>
             </div>
 
             {/* Recurring Days Selection */}
             {rideType === 'recurring' && (
-              <div className="mb-6 p-4 bg-purple-50 rounded-lg border-2 border-purple-200">
+              <div className="mb-6 p-4 bg-purple-50 rounded-lg border-2 border-[f0a824]">
                 <label className="block text-sm font-semibold text-gray-800 mb-3">Select Days</label>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4">
                   {daysOfWeek.map(day => (
@@ -452,7 +452,7 @@ export default function DriverDashboard() {
                   />
                   <label htmlFor="driverFemaleIdentifying" className="text-gray-800 font-semibold cursor-pointer flex items-center gap-2">
                     👩 Female-identifying driver
-                    <span className="text-xs bg-pink-200 text-pink-700 px-2 py-1 rounded-full">Tag visible to riders</span>
+                    <span className="text-xs bg-pink-200 text-pink-700 px-2 py-1 rounded-full">Tag visible to relevant riders only</span>
                   </label>
                 </div>
 
@@ -466,7 +466,7 @@ export default function DriverDashboard() {
                   />
                   <label htmlFor="driver2SLgbtqia" className="text-gray-800 font-semibold cursor-pointer flex items-center gap-2">
                     🌈 2SLGBTQIA+ friendly ride
-                    <span className="text-xs bg-purple-200 text-purple-700 px-2 py-1 rounded-full">Tag visible to riders</span>
+                    <span className="text-xs bg-purple-200 text-purple-700 px-2 py-1 rounded-full">Tag visible to relevant riders only</span>
                   </label>
                 </div>
               </div>
@@ -475,7 +475,7 @@ export default function DriverDashboard() {
             <div className="mt-6">
               <button
                 onClick={handlePostRide}
-                className="px-8 py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition-colors shadow-md hover:shadow-lg"
+                className="px-8 py-3 bg-[#22477a] text-[#f0ebe1] rounded-lg font-semibold hover:bg-[#f0a824] transition-colors shadow-md hover:shadow-lg"
               >
                 Post Ride
               </button>
@@ -484,7 +484,7 @@ export default function DriverDashboard() {
 
           {/* Recurring Rides */}
           {recurringRides.length > 0 && (
-            <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
+            <div className="bg-[#f0ebe1] rounded-2xl shadow-lg p-8 mb-8">
               <h2 className="text-2xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
                 <span className="text-2xl">🔄</span>
                 Recurring Rides ({recurringRides.length})
@@ -499,7 +499,7 @@ export default function DriverDashboard() {
 
           {/* One-Time Rides */}
           {oneTimeRides.length > 0 && (
-            <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
+            <div className="bg-[#f0ebe1] rounded-2xl shadow-lg p-8 mb-8">
               <h2 className="text-2xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
                 <span className="text-2xl">✓</span>
                 One-Time Rides ({oneTimeRides.length})
@@ -513,7 +513,7 @@ export default function DriverDashboard() {
           )}
 
           {myPostedRides.length === 0 && (
-            <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
+            <div className="bg-[#f0ebe1] rounded-2xl shadow-lg p-8 text-center">
               <p className="text-lg text-gray-500 mb-2">No rides posted yet</p>
               <p className="text-sm text-gray-600">Post your first ride above to get started!</p>
             </div>

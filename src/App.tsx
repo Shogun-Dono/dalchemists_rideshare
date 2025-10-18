@@ -15,96 +15,84 @@ function App() {
 
   const handleRoleSelect = (role: string) => {
     setSelectedRole(role);
-
-    if (role === "user") {
-      navigate("/user");
-    } else if (role === "driver") {
-      navigate("/driver");
-    } else {
-      navigate("/admin");
-    }
+    if (role === "user") navigate("/user");
+    else if (role === "driver") navigate("/driver");
+    else navigate("/admin");
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-600 via-purple-600 to-blue-700 flex items-center justify-center p-6">
-      <div className="max-w-6xl w-full">
-
+    <div className="min-h-screen bg-[#22477a] flex items-center justify-center p-6 text-[#1B1B1B]">
+      <div className="max-w-6xl w-full relative">
+        {/* Admin Button (Top-Right) */}
         <button
           onClick={() => handleRoleSelect("admin")}
-          className="absolute top-4 right-4 text-xs text-indigo-100 border border-indigo-300/40 rounded-full px-3 py-1 opacity-70 hover:opacity-100 hover:text-white hover:border-indigo-200 transition-all"
+          className="absolute top-4 right-4 text-xs text-[#f0ebe1] bg-[#1d3a66] rounded-full px-3 py-1 font-semibold opacity-80 hover:opacity-100 hover:bg-[#22477a] transition-all"
         >
-          ⚙️ Operations Hub
+          ⚙️ Admin
         </button>
+
         {/* Header */}
         <div className="text-center mb-12">
-          <div className="flex items-center justify-center mb-6">
-            <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center text-4xl shadow-2xl">
-              🚗
-            </div>
-          </div>
-          <h1 className="text-5xl md:text-6xl font-bold text-white mb-4">
-            Community Rideshare
+          <h1 className="text-5xl md:text-6xl font-bold text-[#f0ebe1] mb-4 tracking-wide">
+            NS Move
           </h1>
-          <p className="text-xl text-indigo-100 max-w-2xl mx-auto">
-            Connect, Share, and Travel Together. Join our community-driven
-            platform for sustainable transportation.
+          <p className="text-lg text-[#f0ebe1] max-w-2xl mx-auto">
+            Connect, share, and travel together — powered by community.
           </p>
         </div>
 
-
-        {/* Role Selection Section */}
-        <div className="flex flex-col items-center gap-10 max-w-4xl mx-auto">
-          {/* Main Role Cards */}
-          <div className="grid md:grid-cols-2 gap-8 w-full">
-            {/* Rider Card */}
-            <div
-              onClick={() => handleRoleSelect("user")}
-              className={`bg-white rounded-3xl p-8 cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl ${
-                selectedRole === "user" ? "ring-4 ring-yellow-400 scale-105" : ""
-              }`}
-            >
-              <div className="text-center">
-                <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-5xl mx-auto mb-6 shadow-lg">
-                  👤
-                </div>
-                <h2 className="text-3xl font-bold text-gray-800 mb-4">I'm a Rider</h2>
-                <p className="text-gray-600 mb-6 text-lg">
-                  Find rides, connect with drivers, and travel sustainably.
-                </p>
-                <button className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white py-4 rounded-xl font-semibold text-lg hover:from-blue-600 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl">
-                  Enter Dashboard →
-                </button>
+        {/* Role Selection Cards */}
+        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          {/* Rider Card */}
+          <div
+            onClick={() => handleRoleSelect("user")}
+            className={`bg-[#f0ebe1] rounded-2xl p-8 cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl ${
+              selectedRole === "user" ? "ring-4 ring-[#b8ccde]" : ""
+            }`}
+          >
+            <div className="text-center">
+              <div className="w-20 h-20 bg-[#b8ccde] rounded-full flex items-center justify-center text-4xl mx-auto mb-6 shadow-sm text-[#f0ebe1]">
+                👤
               </div>
+              <h2 className="text-2xl font-bold text-[#1B1B1B] mb-3">
+                I'm a Rider
+              </h2>
+              <p className="text-[#22477a] mb-6 text-base">
+                Find rides, connect with drivers, and travel sustainably.
+              </p>
+              <button className="w-full bg-[#f0a824] text-[#22477a] py-3 rounded-lg font-semibold text-base hover:bg-[#22477a] hover:text-[#f0a824] transition-all">
+                Enter Dashboard →
+              </button>
             </div>
+          </div>
 
-            {/* Driver Card */}
-            <div
-              onClick={() => handleRoleSelect("driver")}
-              className={`bg-white rounded-3xl p-8 cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl ${
-                selectedRole === "driver" ? "ring-4 ring-yellow-400 scale-105" : ""
-              }`}
-            >
-              <div className="text-center">
-                <div className="w-24 h-24 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center text-5xl mx-auto mb-6 shadow-lg">
-                  🚗
-                </div>
-                <h2 className="text-3xl font-bold text-gray-800 mb-4">I'm a Driver</h2>
-                <p className="text-gray-600 mb-6 text-lg">
-                  Share your rides, earn money, and help reduce carbon emissions.
-                </p>
-                <button className="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white py-4 rounded-xl font-semibold text-lg hover:from-green-600 hover:to-emerald-700 transition-all shadow-lg hover:shadow-xl">
-                  Enter Dashboard →
-                </button>
+          {/* Driver Card */}
+          <div
+            onClick={() => handleRoleSelect("driver")}
+            className={`bg-[#f0ebe1] rounded-2xl p-8 cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl ${
+              selectedRole === "driver" ? "ring-4 ring-[#b8ccde]" : ""
+            }`}
+          >
+            <div className="text-center">
+              <div className="w-20 h-20 bg-[#b8ccde] rounded-full flex items-center justify-center text-4xl mx-auto mb-6 shadow-sm text-[#f0ebe1]">
+                🚗
               </div>
+              <h2 className="text-2xl font-bold text-[#1B1B1B] mb-3">
+                I'm a Driver
+              </h2>
+              <p className="text-[#22477a] mb-6 text-base">
+                Share your rides, earn money, and help reduce carbon emissions.
+              </p>
+              <button className="w-full bg-[#f0a824] text-[#22477a] py-3 rounded-lg font-semibold text-base hover:bg-[#22477a] hover:text-[#f0a824] transition-all">
+                Enter Dashboard →
+              </button>
             </div>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="text-center mt-12 text-indigo-100">
-          <p>
-            © 2025 NS Move. Building a sustainable future together.
-          </p>
+        <div className="text-center mt-12 text-[#b8ccde] text-sm">
+          <p>© 2025 NS Move. Building a sustainable future together.</p>
         </div>
       </div>
     </div>
@@ -119,13 +107,12 @@ export default function AppWrapper() {
       <Route path="/driver" element={<DriverDashboard />} />
       <Route path="/admin" element={<AdminDashboard />} />
       <Route path="/ride-details/:id" element={<RideDetails />} />
-      <Route path="/about" element={<AboutPage/>} />
-      <Route path="/contact" element={<ContactPage/>} />
-      <Route path="/profile" element={<ProfilePage/>} />
+      <Route path="/about" element={<AboutPage />} />
+      <Route path="/contact" element={<ContactPage />} />
+      <Route path="/profile" element={<ProfilePage />} />
       <Route path="/auth" element={<AuthPage />} />
       <Route path="/signup" element={<AuthPage />} />
       <Route path="/login" element={<AuthPage />} />
-      
     </Routes>
   );
 }
