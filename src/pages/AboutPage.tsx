@@ -1,6 +1,7 @@
-import { Users, Leaf, Shield, Award } from "lucide-react";
+import { Users, Leaf, Shield, Award, QrCode } from "lucide-react";
 import Navbar from "../components/NavBar";
 import { Link } from "react-router-dom";
+import QRCodePopup from "../components/QRCodePopup";
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-600 via-purple-600 to-blue-700">
@@ -405,11 +406,11 @@ export default function AboutPage() {
           </button>
         </div>
       </div>
-
+       <QRCodePopup></QRCodePopup>    
       {/* Footer */}
       <div className="text-center py-8 text-indigo-100 border-t border-white border-opacity-20 mt-12">
         <p>© 2025 NS Move. Building a sustainable future together..</p>
       </div>
-    </div>
+      </div>
   );
 }

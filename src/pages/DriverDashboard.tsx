@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { getRides, subscribeToRides, addRide } from "./UserDashboard";
 import Navbar from "../components/NavBar";
+import QRCodePopup from "../components/QRCodePopup";
 
 interface ExtendedRide {
   id: number;
@@ -16,6 +17,8 @@ interface ExtendedRide {
   rideType: 'one-time' | 'recurring';
   recurringDays?: string[];
   endDate?: string;
+  isGroceryRun?: boolean;
+  shoppingDuration?: number;
 }
 
 export default function DriverDashboard() {
@@ -29,6 +32,8 @@ export default function DriverDashboard() {
   const [endDate, setEndDate] = useState("");
   const [isFemaleIdentifying, setIsFemaleIdentifying] = useState(false);
   const [is2SLgbtqia, setIs2SLgbtqia] = useState(false);
+  const [isGroceryRun, setIsGroceryRun] = useState(false);
+  const [shoppingDuration, setShoppingDuration] = useState<number>(30);
   const [, setUpdateTrigger] = useState(0);
 
   useState(() => {
@@ -114,6 +119,8 @@ export default function DriverDashboard() {
       rideType,
       recurringDays: rideType === 'recurring' ? recurringDays : undefined,
       endDate: rideType === 'recurring' ? endDate : undefined,
+      isGroceryRun,
+      shoppingDuration: isGroceryRun ? shoppingDuration : undefined,
     };
 
     addRide(newRide);
@@ -129,6 +136,8 @@ export default function DriverDashboard() {
     setEndDate("");
     setIsFemaleIdentifying(false);
     setIs2SLgbtqia(false);
+    setIsGroceryRun(false);
+    setShoppingDuration(30);
     
     alert(`${rideType === 'recurring' ? 'Recurring' : 'One-time'} ride posted successfully!`);
   };
@@ -157,20 +166,23 @@ export default function DriverDashboard() {
         </span>
       </div>
 
-      {(ride.isFemaleIdentifying || ride.is2SLgbtqia) && (
-        <div className="flex gap-2 mb-4">
-          {ride.isFemaleIdentifying && (
-            <span className="inline-flex items-center gap-1 px-3 py-1 bg-pink-100 text-pink-700 text-xs font-semibold rounded-full">
-              👩 Female Driver
-            </span>
-          )}
-          {ride.is2SLgbtqia && (
-            <span className="inline-flex items-center gap-1 px-3 py-1 bg-purple-100 text-purple-700 text-xs font-semibold rounded-full">
-              🌈 LGBTQIA+ Friendly
-            </span>
-          )}
-        </div>
-      )}
+      <div className="flex flex-wrap gap-2 mb-4">
+        {ride.isFemaleIdentifying && (
+          <span className="inline-flex items-center gap-1 px-3 py-1 bg-pink-100 text-pink-700 text-xs font-semibold rounded-full">
+            👩 Female Driver
+          </span>
+        )}
+        {ride.is2SLgbtqia && (
+          <span className="inline-flex items-center gap-1 px-3 py-1 bg-purple-100 text-purple-700 text-xs font-semibold rounded-full">
+            🌈 LGBTQIA+ Friendly
+          </span>
+        )}
+        {ride.isGroceryRun && (
+          <span className="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">
+            🛒 Grocery Shop ({ride.shoppingDuration} min)
+          </span>
+        )}
+      </div>
 
       <div className="space-y-2">
         <div className="flex items-center gap-2 text-gray-700">
@@ -387,6 +399,43 @@ export default function DriverDashboard() {
               </div>
             )}
 
+            {/* Grocery Run Toggle */}
+            <div className="mb-6 p-4 bg-green-50 rounded-lg border-2 border-green-200">
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={isGroceryRun}
+                  onChange={(e) => setIsGroceryRun(e.target.checked)}
+                  className="w-5 h-5 text-green-600 rounded focus:ring-2 focus:ring-green-600"
+                />
+                <span className="text-gray-800 font-semibold">🛒 This is a grocery run!</span>
+              </label>
+              <p className="text-sm text-gray-600 mt-2 ml-8">Riders can join you for shopping!</p>
+
+              {isGroceryRun && (
+                <div className="mt-4 ml-8">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Shopping Duration
+                  </label>
+                  <div className="flex items-center gap-4">
+                    <input
+                      type="range"
+                      min={15}
+                      max={120}
+                      step={15}
+                      value={shoppingDuration}
+                      onChange={(e) => setShoppingDuration(Number(e.target.value))}
+                      className="flex-1"
+                    />
+                    <span className="text-lg font-semibold text-green-700 w-16">
+                      {shoppingDuration} min
+                    </span>
+                  </div>
+                  <p className="text-xs text-gray-600 mt-2">How long will you shop?</p>
+                </div>
+              )}
+            </div>
+
             {/* Identity & Safety Preferences */}
             <div className="border-2 border-pink-200 rounded-lg p-6 bg-pink-50 mb-6">
               <h3 className="text-lg font-bold text-gray-800 mb-4">Ride Preferences (Optional)</h3>
@@ -469,7 +518,14 @@ export default function DriverDashboard() {
               <p className="text-sm text-gray-600">Post your first ride above to get started!</p>
             </div>
           )}
+      <QRCodePopup></QRCodePopup>
+      <div className="text-center mt-12 text-indigo-100">
+          <p>
+            © 2025 NS Move. Building a sustainable future together.
+          </p>
         </div>
+        </div>
+        
       </div>
     </>
   );

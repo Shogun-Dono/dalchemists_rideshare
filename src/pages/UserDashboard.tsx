@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/NavBar";
+import QRCodePopup from "../components/QRCodePopup";
 
 interface Ride {
   id: number;
@@ -16,6 +17,8 @@ interface Ride {
   rideType: 'one-time' | 'recurring';
   recurringDays?: string[];
   endDate?: string;
+  isGroceryRun?: boolean;
+  shoppingDuration?: number;
 }
 
 // In-memory storage for rides
@@ -33,12 +36,13 @@ let ridesStore: Ride[] = [
     is2SLgbtqia: false,
     rideType: 'recurring',
     recurringDays: ['Monday', 'Wednesday', 'Friday'],
+    isGroceryRun: false,
   },
   {
     id: 2,
     driver: "James K.",
     from: "West End",
-    to: "University",
+    to: "Shopping Centre",
     date: "Oct 17",
     time: "9:30 AM",
     seats: 2,
@@ -46,6 +50,8 @@ let ridesStore: Ride[] = [
     isFemaleIdentifying: false,
     is2SLgbtqia: true,
     rideType: 'one-time',
+    isGroceryRun: true,
+    shoppingDuration: 45,
   },
   {
     id: 3,
@@ -60,12 +66,13 @@ let ridesStore: Ride[] = [
     is2SLgbtqia: true,
     rideType: 'recurring',
     recurringDays: ['Tuesday', 'Thursday'],
+    isGroceryRun: false,
   },
   {
     id: 4,
     driver: "Alex T.",
     from: "North District",
-    to: "Shopping Mall",
+    to: "Grocery Store",
     date: "Oct 18",
     time: "2:00 PM",
     seats: 2,
@@ -73,6 +80,8 @@ let ridesStore: Ride[] = [
     isFemaleIdentifying: false,
     is2SLgbtqia: false,
     rideType: 'one-time',
+    isGroceryRun: true,
+    shoppingDuration: 30,
   },
 ];
 
@@ -98,7 +107,6 @@ export default function UserDashboard() {
   const navigate = useNavigate();
   const [fromLocation, setFromLocation] = useState("");
   const [toLocation, setToLocation] = useState("");
-  const [rideTypeFilter, setRideTypeFilter] = useState<'all' | 'recurring' | 'one-time'>('all');
   const [, setUpdateTrigger] = useState(0);
 
   useState(() => {
@@ -176,11 +184,11 @@ export default function UserDashboard() {
             ? 'bg-purple-100 text-purple-700'
             : 'bg-green-100 text-green-700'
         }`}>
-          {ride.rideType === 'recurring' ? '🔄 Recurring' : '✓ One-Time'}
+          {ride.rideType === 'recurring' ? '🔄 Daily' : '✓ One-Time'}
         </span>
       </div>
 
-      {(ride.isFemaleIdentifying || ride.is2SLgbtqia) && (
+      {(ride.isFemaleIdentifying || ride.is2SLgbtqia || ride.isGroceryRun) && (
         <div className="flex gap-2 mb-4 flex-wrap">
           {ride.isFemaleIdentifying && (
             <span className="inline-flex items-center gap-1 px-3 py-1 bg-pink-100 text-pink-700 text-xs font-semibold rounded-full">
@@ -190,6 +198,11 @@ export default function UserDashboard() {
           {ride.is2SLgbtqia && (
             <span className="inline-flex items-center gap-1 px-3 py-1 bg-purple-100 text-purple-700 text-xs font-semibold rounded-full">
               🌈 LGBTQIA+ Friendly
+            </span>
+          )}
+          {ride.isGroceryRun && (
+            <span className="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">
+              🛒 Grocery ({ride.shoppingDuration} min)
             </span>
           )}
         </div>
@@ -298,9 +311,9 @@ export default function UserDashboard() {
             <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
               <h2 className="text-2xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
                 <span className="text-2xl">🔄</span>
-                Recurring Commutes ({recurringRides.length})
+                Daily Commutes ({recurringRides.length})
               </h2>
-              <p className="text-gray-600 mb-6">Regular rides that repeat on specific days. Perfect for scheduled commutes!</p>
+              <p className="text-gray-600 mb-6">Regular rides that repeat on specific days. Perfect for daily commutes!</p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {recurringRides.map((ride) => (
                   <RideCard key={ride.id} ride={ride} />
@@ -372,6 +385,14 @@ export default function UserDashboard() {
               </p>
             </div>
           </div>
+      <QRCodePopup></QRCodePopup>
+
+          {/* Footer */}
+        <div className="text-center mt-12 text-indigo-100">
+          <p>
+            © 2025 NS Move. Building a sustainable future together.
+          </p>
+        </div>
         </div>
       </div>
     </>

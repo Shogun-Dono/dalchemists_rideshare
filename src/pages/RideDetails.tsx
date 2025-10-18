@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "../components/NavBar";
 import { getRides } from "./UserDashboard";
+import QRCodePopup from "../components/QRCodePopup";
 import {
   MapContainer,
   TileLayer,
@@ -43,6 +44,7 @@ export default function RideDetails() {
   const [message, setMessage] = useState("");
   const [fromCoords, setFromCoords] = useState(null);
   const [toCoords, setToCoords] = useState(null);
+  const [trackingEnabled, setTrackingEnabled] = useState(false);
 
   const rides = getRides() as Ride[];
   const ride = rides.find((r) => r.id === Number(id));
@@ -146,10 +148,10 @@ export default function RideDetails() {
             </div>
 
             {/* Identity Tags Section */}
-            {(ride.isFemaleIdentifying || ride.is2SLgbtqia) && (
+            {(ride.isFemaleIdentifying || ride.is2SLgbtqia || ride.isGroceryRun) && (
               <div className="mb-6 p-4 bg-gradient-to-r from-pink-50 to-purple-50 rounded-xl border-2 border-pink-200">
                 <h3 className="text-lg font-semibold text-gray-800 mb-3">
-                  🤝 Driver Profile
+                  🤝 Driver Profile & Ride Options
                 </h3>
                 <div className="flex flex-wrap gap-3">
                   {ride.isFemaleIdentifying && (
@@ -167,6 +169,15 @@ export default function RideDetails() {
                       <div>
                         <p className="font-semibold text-purple-900">2SLGBTQIA+ Friendly</p>
                         <p className="text-sm text-purple-700">Safe & welcoming space</p>
+                      </div>
+                    </div>
+                  )}
+                  {ride.isGroceryRun && (
+                    <div className="flex items-center gap-2 px-4 py-2 bg-green-100 rounded-lg border border-green-300">
+                      <span className="text-2xl">🛒</span>
+                      <div>
+                        <p className="font-semibold text-green-900">Grocery Shop</p>
+                        <p className="text-sm text-green-700">{ride.shoppingDuration} minutes shopping time</p>
                       </div>
                     </div>
                   )}
@@ -284,15 +295,14 @@ export default function RideDetails() {
                   onChange={(e) => setPassengers(Number(e.target.value))}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
                 >
-                  {Array.from({ length: ride.seats }, (_, i) => i + 1).map(
-                    (num) => (
-                      <option key={num} value={num}>
-                        {num} {num === 1 ? "passenger" : "passengers"}
-                      </option>
-                    )
-                  )}
+                  {Array.from({ length: ride.seats }, (_, i) => i + 1).map((num) => (
+                    <option key={num} value={num}>
+                      {num} {num === 1 ? "passenger" : "passengers"}
+                    </option>
+                  ))}
                 </select>
               </div>
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Message to Driver (Optional)
@@ -306,7 +316,36 @@ export default function RideDetails() {
                 />
               </div>
 
-              {/* Safety & Preferences Info */}
+              {/* 🔒 Tracking Toggle */}
+              <div className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-lg px-4 py-3">
+                <div>
+                  <p className="font-medium text-gray-800">Enable Ride Tracking</p>
+                  <p className="text-sm text-gray-600">
+                    Share your live location during the ride for safety. (Hidden from driver)
+                  </p>
+                </div>
+
+                <label className="inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={trackingEnabled}
+                    onChange={() => setTrackingEnabled(!trackingEnabled)}
+                    className="sr-only peer"
+                  />
+                  <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-400 rounded-full peer peer-checked:bg-blue-600 relative transition">
+                    <span className="absolute top-0.5 left-0.5 bg-white w-5 h-5 rounded-full transition-transform peer-checked:translate-x-5"></span>
+                  </div>
+                </label>
+              </div>
+
+              {/* Optional confirmation text */}
+              {trackingEnabled && (
+                <p className="text-sm text-blue-700 bg-blue-50 border border-blue-200 rounded-lg p-3">
+                  ✅ Ride tracking is enabled. Your live location will be securely shared with your emergency contacts and the Halifax Regional Police if a detour of over 20 minutes occurs.
+                </p>
+              )}
+
+              {/* Safety & Verification Info */}
               <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
                 <p className="text-sm text-blue-900">
                   <span className="font-semibold">✓ Safe Ride:</span> This driver has been verified and reviewed by our community. Your safety is our priority.
@@ -319,13 +358,22 @@ export default function RideDetails() {
               >
                 Send Ride Request
               </button>
+
               <p className="text-xs text-gray-500 text-center">
-                The driver will receive your request and contact you to confirm
-                the details.
+                The driver will receive your request and contact you to confirm the details.
               </p>
             </div>
           </div>
+      <QRCodePopup></QRCodePopup>
+
+              {/* Footer */}
+        <div className="text-center mt-12 text-indigo-100">
+          <p>
+            © 2025 NS Move. Building a sustainable future together.
+          </p>
         </div>
+        </div>
+        
       </div>
     </>
   );

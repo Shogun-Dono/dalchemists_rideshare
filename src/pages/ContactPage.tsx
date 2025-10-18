@@ -1,6 +1,7 @@
 import { Mail, Phone, MapPin, Clock, Send, MessageCircle } from 'lucide-react';
 import { useState } from 'react';
 import NavBar from '../components/NavBar';
+import QRCodePopup from "../components/QRCodePopup";
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -253,7 +254,7 @@ export default function ContactPage() {
           </div>
         </div>
       </div>
-
+      <QRCodePopup></QRCodePopup>
       {/* Footer */}
       <div className="text-center py-8 text-indigo-100 border-t border-white border-opacity-20 mt-12">
         <p>© 2025 NS Move. Building a sustainable future together.</p>
