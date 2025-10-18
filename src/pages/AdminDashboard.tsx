@@ -428,7 +428,7 @@ function AdminDashboard() {
       rides: 240,
       intensity: 48,
     },
-    { area: "Fairview", lat: 44.674, lng: -63.65, rides: 200, intensity: 40 },
+    { area: "Fairview", lat: 44.674, lng: -63.65, rides: 200, intensity: 80 },
     { area: "Spryfield", lat: 44.622, lng: -63.614, rides: 160, intensity: 32 },
   ];
 
