@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 import {
   BarChart,
   Bar,
@@ -25,7 +26,285 @@ interface HeatmapData {
   intensity: number;
 }
 
+interface RideConnection {
+  fromArea: string;
+  toArea: string;
+}
+
 type ViewType = "map" | "bar" | "pie" | "line" | "histogram";
+
+const getFromHeatColor = (intensity: number) => {
+  if (intensity >= 70) return "#dc2626"; // red
+  if (intensity >= 50) return "#f97316"; // orange/yellow
+  if (intensity >= 30) return "#eab308"; // yellow
+  return "#22c55e"; // green
+};
+
+const getToHeatColor = (intensity: number) => {
+  if (intensity >= 70) return "#6b21a8"; // purple
+  if (intensity >= 50) return "#2563eb"; // blue
+  return "#60a5fa"; // light blue
+};
+
+const RidesHeatmapWithStraightLines = ({
+  ridesFrom,
+  ridesTo,
+  connections,
+}: {
+  ridesFrom: HeatmapData[];
+  ridesTo: HeatmapData[];
+  connections: RideConnection[];
+}) => {
+  const mapRef = useRef<L.Map | null>(null);
+
+  useEffect(() => {
+    if (!document.getElementById("leaflet-css")) {
+      const link = document.createElement("link");
+      link.id = "leaflet-css";
+      link.rel = "stylesheet";
+      link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+      document.head.appendChild(link);
+    }
+
+    if (!mapRef.current) {
+      mapRef.current = L.map("map", {
+        center: [44.6488, -63.5752],
+        zoom: 11,
+        scrollWheelZoom: true,
+      });
+
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "© OpenStreetMap contributors",
+        maxZoom: 19,
+      }).addTo(mapRef.current);
+    } else {
+      mapRef.current.eachLayer((layer) => {
+        if (
+          layer instanceof L.Circle ||
+          layer instanceof L.CircleMarker ||
+          layer instanceof L.Polyline
+        ) {
+          mapRef.current!.removeLayer(layer);
+        }
+      });
+    }
+
+    const findPoint = (areaName: string, list: HeatmapData[]) =>
+      list.find((p) => p.area === areaName);
+
+    ridesFrom.forEach((point) => {
+      const color = getFromHeatColor(point.intensity);
+      const radius = 200 + point.intensity * 10;
+
+      L.circle([point.lat, point.lng], {
+        color,
+        fillColor: color,
+        fillOpacity: 0.3,
+        radius,
+        weight: 2,
+      }).addTo(mapRef.current!);
+
+      const marker = L.circleMarker([point.lat, point.lng], {
+        radius: 8,
+        fillColor: color,
+        color: "#fff",
+        weight: 2,
+        opacity: 1,
+        fillOpacity: 0.9,
+      }).addTo(mapRef.current!);
+
+      marker.bindPopup(`
+        <div style="text-align: center; padding: 4px;">
+          <h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: bold; color:#166534;">From: ${point.area}</h3>
+          <p style="margin: 0; font-size: 14px;"><strong>${point.rides}</strong> rides</p>
+          <p style="margin: 4px 0 0 0; font-size: 12px; color: #666;">Intensity: ${point.intensity}%</p>
+        </div>
+      `);
+
+      marker.bindTooltip(point.area, {
+        permanent: true,
+        offset: [12, 0],
+        direction: "right",
+        className: "from-label",
+      });
+
+      marker.on("mouseover", () => marker.openPopup());
+    });
+
+    ridesTo.forEach((point) => {
+      const color = getToHeatColor(point.intensity);
+      const radius = 200 + point.intensity * 10;
+
+      L.circle([point.lat, point.lng], {
+        color,
+        fillColor: color,
+        fillOpacity: 0.3,
+        radius,
+        weight: 2,
+      }).addTo(mapRef.current!);
+
+      const marker = L.circleMarker([point.lat, point.lng], {
+        radius: 8,
+        fillColor: color,
+        color: "#fff",
+        weight: 2,
+        opacity: 1,
+        fillOpacity: 0.9,
+      }).addTo(mapRef.current!);
+
+      marker.bindPopup(`
+        <div style="text-align: center; padding: 4px;">
+          <h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: bold; color:#1e3a8a;">To: ${point.area}</h3>
+          <p style="margin: 0; font-size: 14px;"><strong>${point.rides}</strong> rides</p>
+          <p style="margin: 4px 0 0 0; font-size: 12px; color: #666;">Intensity: ${point.intensity}%</p>
+        </div>
+      `);
+
+      marker.bindTooltip(point.area, {
+        permanent: true,
+        offset: [12, 0],
+        direction: "right",
+        className: "to-label",
+      });
+
+      marker.on("mouseover", () => marker.openPopup());
+    });
+
+    connections.forEach(({ fromArea, toArea }) => {
+      const fromPoint = findPoint(fromArea, ridesFrom);
+      const toPoint = findPoint(toArea, ridesTo);
+
+      if (fromPoint && toPoint) {
+        L.polyline(
+          [
+            [fromPoint.lat, fromPoint.lng],
+            [toPoint.lat, toPoint.lng],
+          ],
+          {
+            color: "#6b7280",
+            weight: 3,
+            opacity: 0.7,
+            dashArray: "8, 6",
+            lineJoin: "round",
+          }
+        ).addTo(mapRef.current!);
+      }
+    });
+
+    setTimeout(() => mapRef.current!.invalidateSize(), 100);
+
+    return () => {
+      if (mapRef.current) {
+        mapRef.current.eachLayer((layer) => {
+          if (
+            layer instanceof L.Circle ||
+            layer instanceof L.CircleMarker ||
+            layer instanceof L.Polyline
+          ) {
+            mapRef.current!.removeLayer(layer);
+          }
+        });
+      }
+    };
+  }, [ridesFrom, ridesTo, connections]);
+
+  return (
+    <div>
+      <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+        Interactive Ride Activity Heatmap with Multiple Connections
+      </h2>
+      <div
+        id="map"
+        style={{
+          height: "600px",
+          borderRadius: "8px",
+          border: "2px solid #e5e7eb",
+          width: "100%",
+        }}
+      ></div>
+      <style>{`
+        .from-label {
+          background-color: #d1fae5;
+          color: #065f46;
+          padding: 2px 6px;
+          border-radius: 4px;
+          font-weight: 600;
+          font-size: 12px;
+          box-shadow: 0 0 2px rgba(0,0,0,0.2);
+        }
+        .to-label {
+          background-color: #dbeafe;
+          color: #1e3a8a;
+          padding: 2px 6px;
+          border-radius: 4px;
+          font-weight: 600;
+          font-size: 12px;
+          box-shadow: 0 0 2px rgba(0,0,0,0.2);
+        }
+        .legend-container {
+          display: flex;
+          gap: 20px;
+          margin-top: 12px;
+          font-size: 14px;
+          color: #4b5563;
+        }
+        .legend-item {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+        }
+        .legend-color-box {
+          width: 20px;
+          height: 20px;
+          border-radius: 4px;
+          border: 1px solid #9ca3af;
+        }
+        .from-green { background-color: #22c55e; }
+        .from-yellow { background-color: #eab308; }
+        .from-orange { background-color: #f97316; }
+        .from-red { background-color: #dc2626; }
+        .to-lightblue { background-color: #60a5fa; }
+        .to-blue { background-color: #2563eb; }
+        .to-purple { background-color: #6b21a8; }
+      `}</style>
+      <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+        <p className="text-sm text-gray-600">
+          <strong>💡 Tip:</strong> Click and drag to pan. Scroll to zoom. Hover
+          over markers for details. Multiple lines connect one 'from' to many
+          'to' rides.
+        </p>
+      </div>
+      {/* Legend */}
+      <div className="legend-container">
+        <div className="legend-item">
+          <div className="legend-color-box from-green"></div> Rides From - Low
+          (Green)
+        </div>
+        <div className="legend-item">
+          <div className="legend-color-box from-yellow"></div> Medium (Yellow)
+        </div>
+        <div className="legend-item">
+          <div className="legend-color-box from-orange"></div> High (Orange)
+        </div>
+        <div className="legend-item">
+          <div className="legend-color-box from-red"></div> Very High (Red)
+        </div>
+        <div className="legend-item" style={{ marginLeft: "30px" }}>
+          <div className="legend-color-box to-lightblue"></div> Rides To - Low
+          (Light Blue)
+        </div>
+        <div className="legend-item">
+          <div className="legend-color-box to-blue"></div> Medium (Blue)
+        </div>
+        <div className="legend-item">
+          <div className="legend-color-box to-purple"></div> High (Purple)
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Chart components reused from before:
 
 const RidesByAreaChart = ({ data }: { data: any[] }) => (
   <div>
@@ -119,234 +398,13 @@ const DistanceHistogramChart = ({ data }: { data: any[] }) => (
   </div>
 );
 
-const InteractiveHeatmap = ({ data }: { data: HeatmapData[] }) => {
-  const mapRef = useRef<L.Map | null>(null);
-  const mapContainerRef = useRef<HTMLDivElement | null>(null);
-  const [viewMode, setViewMode] = useState<"all" | "from" | "to">("all");
-
-  useEffect(() => {
-    if (!document.getElementById("leaflet-css")) {
-      const link = document.createElement("link");
-      link.id = "leaflet-css";
-      link.rel = "stylesheet";
-      link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
-      document.head.appendChild(link);
-    }
-
-    if (mapContainerRef.current && !mapRef.current) {
-      mapRef.current = L.map(mapContainerRef.current, {
-        center: [44.6488, -63.5752],
-        zoom: 11,
-        scrollWheelZoom: true,
-      });
-
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: "© OpenStreetMap contributors",
-        maxZoom: 19,
-      }).addTo(mapRef.current);
-    } else if (mapRef.current) {
-      // Remove old circles and markers but keep base tile layer
-      mapRef.current.eachLayer((layer) => {
-        if (layer instanceof L.Circle || layer instanceof L.CircleMarker) {
-          mapRef.current!.removeLayer(layer);
-        }
-      });
-    }
-
-    // Datasets for filtering
-    const ridesFromPoints: HeatmapData[] = [
-      {
-        area: "Downtown Halifax",
-        lat: 44.6488,
-        lng: -63.5752,
-        rides: 450,
-        intensity: 90,
-      },
-      { area: "South End", lat: 44.63, lng: -63.57, rides: 280, intensity: 56 },
-      {
-        area: "Clayton Park",
-        lat: 44.657,
-        lng: -63.637,
-        rides: 240,
-        intensity: 48,
-      },
-    ];
-
-    const ridesToPoints: HeatmapData[] = [
-      { area: "North End", lat: 44.66, lng: -63.59, rides: 320, intensity: 64 },
-      {
-        area: "Dartmouth",
-        lat: 44.671,
-        lng: -63.569,
-        rides: 380,
-        intensity: 76,
-      },
-      { area: "Bedford", lat: 44.729, lng: -63.647, rides: 190, intensity: 38 },
-    ];
-
-    let filteredPoints: HeatmapData[] = data;
-    if (viewMode === "from") filteredPoints = ridesFromPoints;
-    else if (viewMode === "to") filteredPoints = ridesToPoints;
-
-    filteredPoints.forEach((point) => {
-      const color = getHeatColor(point.intensity);
-      const radius = 200 + point.intensity * 10;
-
-      L.circle([point.lat, point.lng], {
-        color,
-        fillColor: color,
-        fillOpacity: 0.3,
-        radius,
-        weight: 2,
-      }).addTo(mapRef.current!);
-
-      const marker = L.circleMarker([point.lat, point.lng], {
-        radius: 8,
-        fillColor: color,
-        color: "#fff",
-        weight: 2,
-        opacity: 1,
-        fillOpacity: 0.9,
-      }).addTo(mapRef.current!);
-
-      marker.bindPopup(`
-        <div style="text-align: center; padding: 4px;">
-          <h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: bold;">${point.area}</h3>
-          <p style="margin: 0; font-size: 14px;"><strong>${point.rides}</strong> rides</p>
-          <p style="margin: 4px 0 0 0; font-size: 12px; color: #666;">Intensity: ${point.intensity}%</p>
-        </div>
-      `);
-
-      marker.on("mouseover", () => marker.openPopup());
-    });
-
-    setTimeout(() => mapRef.current!.invalidateSize(), 100);
-
-    return () => {
-      if (mapRef.current) {
-        mapRef.current.eachLayer((layer) => {
-          if (layer instanceof L.Circle || layer instanceof L.CircleMarker) {
-            mapRef.current!.removeLayer(layer);
-          }
-        });
-      }
-    };
-  }, [data, viewMode]);
-
-  const getHeatColor = (intensity: number) => {
-    if (intensity >= 70) return "#dc2626";
-    if (intensity >= 50) return "#f97316";
-    if (intensity >= 30) return "#eab308";
-    return "#22c55e";
-  };
-
-  return (
-    <div style={{ position: "relative" }}>
-      <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-        Interactive Ride Activity Heatmap
-      </h2>
-
-      <div
-        ref={mapContainerRef}
-        style={{
-          height: "600px",
-          borderRadius: "8px",
-          border: "2px solid #e5e7eb",
-          width: "100%",
-        }}
-      />
-
-      {/* Buttons to toggle heatmap mode */}
-      <div
-        style={{
-          position: "absolute",
-          top: "120px",
-          right: "30px",
-          display: "flex",
-          flexDirection: "column",
-          gap: "10px",
-          zIndex: 1000,
-        }}
-      >
-        <button
-          onClick={() => setViewMode("all")}
-          className={`px-4 py-2 rounded-lg font-semibold ${
-            viewMode === "all"
-              ? "bg-purple-600 text-white"
-              : "bg-white text-gray-800 shadow-md"
-          }`}
-        >
-          All Rides
-        </button>
-        <button
-          onClick={() => setViewMode("from")}
-          className={`px-4 py-2 rounded-lg font-semibold ${
-            viewMode === "from"
-              ? "bg-purple-600 text-white"
-              : "bg-white text-gray-800 shadow-md"
-          }`}
-        >
-          Rides From
-        </button>
-        <button
-          onClick={() => setViewMode("to")}
-          className={`px-4 py-2 rounded-lg font-semibold ${
-            viewMode === "to"
-              ? "bg-purple-600 text-white"
-              : "bg-white text-gray-800 shadow-md"
-          }`}
-        >
-          Rides To
-        </button>
-      </div>
-
-      <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-        <p className="text-sm text-gray-600">
-          <strong>💡 Tip:</strong> Click and drag to pan. Scroll to zoom. Hover
-          over markers for details.
-        </p>
-        <div className="flex items-center gap-6 mt-3 text-sm flex-wrap">
-          <div className="flex items-center gap-2">
-            <div
-              className="w-4 h-4 rounded-full"
-              style={{ backgroundColor: "#22c55e" }}
-            />
-            <span>Low (0-30)</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div
-              className="w-4 h-4 rounded-full"
-              style={{ backgroundColor: "#eab308" }}
-            />
-            <span>Medium (30-50)</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div
-              className="w-4 h-4 rounded-full"
-              style={{ backgroundColor: "#f97316" }}
-            />
-            <span>High (50-70)</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div
-              className="w-4 h-4 rounded-full"
-              style={{ backgroundColor: "#dc2626" }}
-            />
-            <span>Very High (70+)</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 function AdminDashboard() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("all");
   const [timeRange, setTimeRange] = useState("week");
   const [activeView, setActiveView] = useState<ViewType>("map");
 
-  const heatmapData: HeatmapData[] = [
+  const ridesFrom: HeatmapData[] = [
     {
       area: "Downtown Halifax",
       lat: 44.6488,
@@ -355,11 +413,14 @@ function AdminDashboard() {
       intensity: 90,
     },
     { area: "North End", lat: 44.66, lng: -63.59, rides: 320, intensity: 64 },
-    { area: "South End", lat: 44.63, lng: -63.57, rides: 280, intensity: 56 },
-    { area: "West End", lat: 44.645, lng: -63.6, rides: 210, intensity: 42 },
     { area: "Dartmouth", lat: 44.671, lng: -63.569, rides: 380, intensity: 76 },
     { area: "Bedford", lat: 44.729, lng: -63.647, rides: 190, intensity: 38 },
     { area: "Sackville", lat: 44.77, lng: -63.68, rides: 150, intensity: 30 },
+  ];
+
+  const ridesTo: HeatmapData[] = [
+    { area: "South End", lat: 44.63, lng: -63.57, rides: 280, intensity: 56 },
+    { area: "West End", lat: 44.645, lng: -63.6, rides: 210, intensity: 42 },
     {
       area: "Clayton Park",
       lat: 44.657,
@@ -367,9 +428,22 @@ function AdminDashboard() {
       rides: 240,
       intensity: 48,
     },
-    { area: "Fairview", lat: 44.674, lng: -63.638, rides: 200, intensity: 40 },
+    { area: "Fairview", lat: 44.674, lng: -63.65, rides: 200, intensity: 40 },
     { area: "Spryfield", lat: 44.622, lng: -63.614, rides: 160, intensity: 32 },
   ];
+
+  // Multiple connections per 'fromArea' supported here:
+  const connections: RideConnection[] = [
+    { fromArea: "Downtown Halifax", toArea: "South End" },
+    { fromArea: "Downtown Halifax", toArea: "West End" },
+    { fromArea: "North End", toArea: "West End" },
+    { fromArea: "North End", toArea: "Clayton Park" },
+    { fromArea: "Dartmouth", toArea: "Clayton Park" },
+    { fromArea: "Bedford", toArea: "Fairview" },
+    { fromArea: "Sackville", toArea: "Spryfield" },
+  ];
+
+  const heatmapData = [...ridesFrom, ...ridesTo];
 
   const ridesByArea = heatmapData
     .map((d) => ({
@@ -404,7 +478,7 @@ function AdminDashboard() {
     { range: "20+ km", count: 90 },
   ];
 
-  const filteredData = heatmapData.filter((item) => {
+  const filteredFrom = ridesFrom.filter((item) => {
     const matchesSearch = item.area
       .toLowerCase()
       .includes(searchQuery.toLowerCase());
@@ -416,11 +490,30 @@ function AdminDashboard() {
     return matchesSearch && matchesFilter;
   });
 
+  const filteredTo = ridesTo.filter((item) => {
+    const matchesSearch = item.area
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+    const matchesFilter =
+      selectedFilter === "all" ||
+      (selectedFilter === "high" && item.rides > 300) ||
+      (selectedFilter === "medium" && item.rides >= 200 && item.rides <= 300) ||
+      (selectedFilter === "low" && item.rides < 200);
+    return matchesSearch && matchesFilter;
+  });
+
+  const filteredConnections = connections.filter(
+    ({ fromArea, toArea }) =>
+      filteredFrom.some((f) => f.area === fromArea) &&
+      filteredTo.some((t) => t.area === toArea)
+  );
+
   return (
     <>
       <Navbar />
       <div className="min-h-screen bg-gray-50 p-6">
         <div className="max-w-7xl mx-auto">
+          {/* Header */}
           <div className="mb-6">
             <h1 className="text-4xl font-bold text-gray-800 mb-2">
               Admin Dashboard
@@ -430,6 +523,7 @@ function AdminDashboard() {
             </p>
           </div>
 
+          {/* Search and Filters */}
           <div className="bg-white rounded-xl shadow-md p-6 mb-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
@@ -477,63 +571,43 @@ function AdminDashboard() {
             </div>
           </div>
 
+          {/* View Navigation Buttons */}
           <div className="bg-white rounded-xl shadow-md p-4 mb-6">
             <div className="flex flex-wrap gap-3">
-              <button
-                onClick={() => setActiveView("map")}
-                className={`px-6 py-3 rounded-lg font-semibold transition-all ${
-                  activeView === "map"
-                    ? "bg-purple-600 text-white shadow-lg"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                }`}
-              >
-                🗺️ Heatmap
-              </button>
-              <button
-                onClick={() => setActiveView("bar")}
-                className={`px-6 py-3 rounded-lg font-semibold transition-all ${
-                  activeView === "bar"
-                    ? "bg-purple-600 text-white shadow-lg"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                }`}
-              >
-                📊 Bar Chart
-              </button>
-              <button
-                onClick={() => setActiveView("pie")}
-                className={`px-6 py-3 rounded-lg font-semibold transition-all ${
-                  activeView === "pie"
-                    ? "bg-purple-600 text-white shadow-lg"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                }`}
-              >
-                🥧 Pie Chart
-              </button>
-              <button
-                onClick={() => setActiveView("line")}
-                className={`px-6 py-3 rounded-lg font-semibold transition-all ${
-                  activeView === "line"
-                    ? "bg-purple-600 text-white shadow-lg"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                }`}
-              >
-                📈 Line Chart
-              </button>
-              <button
-                onClick={() => setActiveView("histogram")}
-                className={`px-6 py-3 rounded-lg font-semibold transition-all ${
-                  activeView === "histogram"
-                    ? "bg-purple-600 text-white shadow-lg"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                }`}
-              >
-                📉 Histogram
-              </button>
+              {["map", "bar", "pie", "line", "histogram"].map((view) => {
+                const labels: Record<ViewType, string> = {
+                  map: "🗺️ Heatmap",
+                  bar: "📊 Bar Chart",
+                  pie: "🥧 Pie Chart",
+                  line: "📈 Line Chart",
+                  histogram: "📉 Histogram",
+                };
+                return (
+                  <button
+                    key={view}
+                    onClick={() => setActiveView(view as ViewType)}
+                    className={`px-6 py-3 rounded-lg font-semibold transition-all ${
+                      activeView === view
+                        ? "bg-purple-600 text-white shadow-lg"
+                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    }`}
+                  >
+                    {labels[view as ViewType]}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
+          {/* Central View */}
           <div className="bg-white rounded-xl shadow-md p-6 mb-6">
-            {activeView === "map" && <InteractiveHeatmap data={filteredData} />}
+            {activeView === "map" && (
+              <RidesHeatmapWithStraightLines
+                ridesFrom={filteredFrom}
+                ridesTo={filteredTo}
+                connections={filteredConnections}
+              />
+            )}
             {activeView === "bar" && <RidesByAreaChart data={ridesByArea} />}
             {activeView === "pie" && (
               <TimeDistributionChart data={timeDistribution} />
@@ -546,6 +620,7 @@ function AdminDashboard() {
             )}
           </div>
 
+          {/* Summary Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="bg-white rounded-xl shadow-md p-6">
               <p className="text-gray-600 text-sm mb-1">Total Rides</p>
