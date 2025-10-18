@@ -7,6 +7,7 @@ import RideDetails from "./pages/RideDetails";
 import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
 import ProfilePage from "./pages/ProfilePage";
+import AuthPage from "./pages/AuthPage";
 
 function App() {
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
@@ -139,6 +140,9 @@ export default function AppWrapper() {
       <Route path="/about" element={<AboutPage/>} />
       <Route path="/contact" element={<ContactPage/>} />
       <Route path="/profile" element={<ProfilePage/>} />
+      <Route path="/auth" element={<AuthPage />} />
+      <Route path="/signup" element={<AuthPage />} />
+      <Route path="/login" element={<AuthPage />} />
       
     </Routes>
   );

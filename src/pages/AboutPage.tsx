@@ -1,6 +1,6 @@
 import { Users, Leaf, Shield, Award } from "lucide-react";
 import Navbar from "../components/NavBar";
-
+import { Link } from "react-router-dom";
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-600 via-purple-600 to-blue-700">
@@ -397,7 +397,10 @@ export default function AboutPage() {
             Be part of the ridesharing revolution in Nova Scotia.
           </p>
           <button className="inline-block bg-gradient-to-r from-indigo-600 to-blue-600 text-white px-10 py-4 rounded-xl font-semibold text-lg hover:shadow-xl transition-all hover:from-indigo-700 hover:to-blue-700">
-            Get Started Today →
+             <Link
+              to="/auth"
+              className="text-white no-underline hover:text-indigo-100 transition-colors"
+            >Get Started Today →</Link>
           </button>
         </div>
       </div>
