@@ -26,7 +26,7 @@ function App() {
           onClick={() => handleRoleSelect("admin")}
           className="absolute top-4 right-4 text-xs text-[#f0ebe1] bg-[#1d3a66] rounded-full px-3 py-1 font-semibold opacity-80 hover:opacity-100 hover:bg-[#22477a] transition-all"
         >
-          ⚙️ Admin
+          ⚙️ Operations
         </button>
 
         {/* Header */}
