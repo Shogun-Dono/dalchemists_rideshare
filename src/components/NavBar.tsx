@@ -41,13 +41,6 @@ const Navbar = () => {
           Contact Us
         </Link>
 
-        <Link
-          to="/auth"
-          className="text-[#22477a] hover:text-[#f0a824] font-medium"
-        >
-          Login
-        </Link>
-
         {/* Profile Icon */}
         <button
           aria-label="Profile"

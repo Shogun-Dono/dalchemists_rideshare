@@ -10,13 +10,11 @@ import ProfilePage from "./pages/ProfilePage";
 import AuthPage from "./pages/AuthPage";
 
 function App() {
-  const [selectedRole, setSelectedRole] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const handleRoleSelect = (role: string) => {
-    setSelectedRole(role);
-    if (role === "user") navigate("/user");
-    else if (role === "driver") navigate("/driver");
+    if (role === "user") navigate("/auth?role=user");
+    else if (role === "driver") navigate("/auth?role=driver");
     else navigate("/admin");
   };
 
@@ -46,9 +44,7 @@ function App() {
           {/* Rider Card */}
           <div
             onClick={() => handleRoleSelect("user")}
-            className={`bg-[#f0ebe1] rounded-2xl p-8 cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl ${
-              selectedRole === "user" ? "ring-4 ring-[#b8ccde]" : ""
-            }`}
+            className="bg-[#f0ebe1] rounded-2xl p-8 cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl"
           >
             <div className="text-center">
               <div className="w-20 h-20 bg-[#b8ccde] rounded-full flex items-center justify-center text-4xl mx-auto mb-6 shadow-sm text-[#f0ebe1]">
@@ -69,9 +65,7 @@ function App() {
           {/* Driver Card */}
           <div
             onClick={() => handleRoleSelect("driver")}
-            className={`bg-[#f0ebe1] rounded-2xl p-8 cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl ${
-              selectedRole === "driver" ? "ring-4 ring-[#b8ccde]" : ""
-            }`}
+            className="bg-[#f0ebe1] rounded-2xl p-8 cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl"
           >
             <div className="text-center">
               <div className="w-20 h-20 bg-[#b8ccde] rounded-full flex items-center justify-center text-4xl mx-auto mb-6 shadow-sm text-[#f0ebe1]">

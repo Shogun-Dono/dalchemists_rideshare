@@ -1,9 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Mail, Lock, User, Upload, Check, Eye, EyeOff } from 'lucide-react';
 import NavBar from '../components/NavBar';
 import QRCodePopup from "../components/QRCodePopup";
 
 export default function AuthPage() {
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const roleParam = searchParams.get('role');
+
   const [isLogin, setIsLogin] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [isDriver, setIsDriver] = useState(false);
@@ -61,6 +66,15 @@ export default function AuthPage() {
     e.preventDefault();
     console.log('Form submitted:', formData);
     alert(isLogin ? 'Login successful!' : 'Sign up successful!');
+    
+    // Redirect based on the role parameter
+    if (roleParam === 'user') {
+      navigate('/user');
+    } else if (roleParam === 'driver') {
+      navigate('/driver');
+    } else {
+      navigate('/');
+    }
   };
 
   return (
